@@ -87,14 +87,18 @@ typedef void (*exitcall_t)(void);
 #define late_initcall_sync(fn)		__define_initcall("7s",fn,7s)
 
 #define __initcall(fn) module_initcall(fn)
+#define __servicecall(fn) late_initcall(fn)
 
 #define __exitcall(fn) \
 	static exitcall_t __exitcall_##fn __exit_call = fn
 
 
 // 模块初始化
-#define module_init(x)	__initcall(x);
-#define module_exit(x)	__exitcall(x);
+#define modules_init(x)	__initcall(x);
+#define modules_exit(x)	__exitcall(x);
+//业务初始化
+#define services_init(x)	__servicecall(x);
+#define services_exit(x)	__exitcall(x);
 
 
 #ifdef  __cplusplus

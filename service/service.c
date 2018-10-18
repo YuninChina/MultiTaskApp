@@ -41,8 +41,8 @@ static void service_exit(void)
 }
 
 
-module_init(service_init);
-module_exit(service_exit);
+services_init(service_init);
+services_exit(service_exit);
 
 #ifdef  __cplusplus
 }

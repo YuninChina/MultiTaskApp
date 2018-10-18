@@ -29,20 +29,20 @@ extern "C" {
 /* Private variables ---------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
-static int modules_init(void)
+static int module_init(void)
 {
 	printf("do %s ...\n",__func__);
     return 0;
 }
 
-static void modules_exit(void)
+static void module_exit(void)
 {
 	printf("do %s ...\n",__func__);
 }
 
 
-module_init(modules_init);
-module_exit(modules_exit);
+modules_init(module_init);
+modules_exit(module_exit);
 
 #ifdef  __cplusplus
 }

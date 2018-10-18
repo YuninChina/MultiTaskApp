@@ -44,8 +44,8 @@ static void bsp_exit(void)
 }
 
 
-module_init(bsp_init);
-module_exit(bsp_exit);
+modules_init(bsp_init);
+modules_exit(bsp_exit);
 
 
 #ifdef  __cplusplus

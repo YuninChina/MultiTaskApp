@@ -42,8 +42,8 @@ static void kernel_exit(void)
 }
 
 
-module_init(kernel_init);
-module_exit(kernel_exit);
+modules_init(kernel_init);
+modules_exit(kernel_exit);
 
 
 #ifdef  __cplusplus

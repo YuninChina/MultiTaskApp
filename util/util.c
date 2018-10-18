@@ -42,8 +42,8 @@ static void util_exit(void)
 }
 
 
-module_init(util_init);
-module_exit(util_exit);
+modules_init(util_init);
+modules_exit(util_exit);
 
 
 #ifdef  __cplusplus
