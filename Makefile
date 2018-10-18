@@ -4,6 +4,8 @@ PHONY : all
 
 TARGET_NAME ?= bin/MultiTaskApp
 
+CROSS_COMPILE ?= arm-hisiv400-linux-
+
 AS	= $(CROSS_COMPILE)as
 LD	= $(CROSS_COMPILE)ld
 CC	= $(CROSS_COMPILE)gcc
@@ -17,7 +19,10 @@ RANLIB	= $(CROSS_COMPILE)RANLIB
 
 CFLAGS =
 CFLAGS += -rdynamic -pipe -O2 -Wall
-CFLAGS += -I 3th
+CFLAGS += -I 3th/include
+CFLAGS += -I 3th/include/glib-2.0
+CFLAGS += -I 3th/include/gio-unix-2.0
+CFLAGS += -I 3th/include/dbus-1.0
 CFLAGS += -I bsp
 CFLAGS += -I include
 CFLAGS += -I kernel
@@ -45,12 +50,17 @@ endif
 
 TEST_CFLAGS ?= ${CFLAGS}
 LINK_PATH := -L libs
+LINK_PATH += -L 3th/lib/arm
 LD_LIBS := 
-LD_LIBS += -lbsp
-LD_LIBS += -lkernel
-LD_LIBS += -lmodule
-LD_LIBS += -lservice
-LD_LIBS += -lutil
+LD_SLIBS += -lbsp
+LD_SLIBS += -lkernel
+LD_SLIBS += -lmodule
+LD_SLIBS += -lservice
+LD_SLIBS += -lutil
+
+LD_DLIBS += -lglib-2.0
+LD_DLIBS += -lpthread
+LD_DLIBS += -lrt
 
 export TEST_CFLAGS LINK_PATH LD_LIBS
 
@@ -75,7 +85,7 @@ objs := init/main.o
 
 all: $(dirs) ${objs}
 	@mkdir -p bin
-	$(CC) ${CFLAGS} ${LINK_PATH} -T ${LD_SCRIPT} -o ${TARGET_NAME} ${objs} ${LINK_STATIC} ${LD_LIBS} ${LINK_SHARED}
+	$(CC) ${CFLAGS} ${LINK_PATH} -T ${LD_SCRIPT} -o ${TARGET_NAME} ${objs} ${LINK_STATIC} ${LD_SLIBS} ${LINK_SHARED} ${LD_DLIBS}
 
 test_dirs := tests/
 test_dirs := ${patsubst %/,%,$(filter %/, $(test_dirs))}

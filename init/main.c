@@ -6,10 +6,11 @@
 #include <stdio.h>
 
 #include "init.h"
+#include "glib.h"
 
 extern initcall_t __initcall_start[], __initcall_end[];
 
-void initcalls(void)
+static void initcalls(void)
 {
 	initcall_t *call;
 	int result;
@@ -25,11 +26,21 @@ void initcalls(void)
 	}
 }
 
+static GMainLoop *g_mainLoop = NULL;
+static void main_loop_start(void)
+{
+	printf("Main loop ...\n");
+	g_mainLoop = g_main_new(FALSE);
+	g_main_loop_run(g_mainLoop);
+	g_main_loop_unref (g_mainLoop);
+	printf("Main exit...\n");
+}
 
 int
 main(int argc, char *argv[])
 {
 	initcalls();
+	main_loop_start();
 	return 0;
 }
 
