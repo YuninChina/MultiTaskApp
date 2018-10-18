@@ -86,6 +86,7 @@ typedef void (*exitcall_t)(void);
 #define late_initcall(fn)		__define_initcall("7",fn,7)
 #define late_initcall_sync(fn)		__define_initcall("7s",fn,7s)
 
+#define __corecall(fn) core_initcall(fn)
 #define __initcall(fn) module_initcall(fn)
 #define __servicecall(fn) late_initcall(fn)
 
