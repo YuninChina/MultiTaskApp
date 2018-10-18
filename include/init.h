@@ -93,9 +93,14 @@ typedef void (*exitcall_t)(void);
 	static exitcall_t __exitcall_##fn __exit_call = fn
 
 
+//核心模块初始化
+#define cores_init(x)	__corecall(x);
+#define cores_exit(x)	__exitcall(x);
+
 // 模块初始化
 #define modules_init(x)	__initcall(x);
 #define modules_exit(x)	__exitcall(x);
+
 //业务初始化
 #define services_init(x)	__servicecall(x);
 #define services_exit(x)	__exitcall(x);
