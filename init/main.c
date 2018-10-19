@@ -9,8 +9,8 @@
 #include "glib.h"
 #include "log.h"
 
+//===============================================================================
 extern initcall_t __initcall_start[], __initcall_end[];
-
 static void initcalls(void)
 {
 	initcall_t *call;
@@ -26,6 +26,7 @@ static void initcalls(void)
 	}
 }
 
+//===============================================================================
 static GMainLoop *g_mainLoop = NULL;
 static void main_loop_start(void)
 {
@@ -36,9 +37,21 @@ static void main_loop_start(void)
 	MESSAGE("Main exit...\n");
 }
 
+
+//===============================================================================
+#undef VERSIONS
+#define VERSIONS	"0.0.3"
+static void version_usage(void)
+{
+	MESSAGE("###########################################");
+	MESSAGE("########## version: v%-10s ##########",VERSIONS);
+	MESSAGE("###########################################");
+}
+
 int
 main(int argc, char *argv[])
 {
+	version_usage();
 	initcalls();
 	main_loop_start();
 	return 0;
