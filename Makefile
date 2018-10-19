@@ -27,6 +27,7 @@ CFLAGS += -I bsp
 CFLAGS += -I include
 CFLAGS += -I kernel
 CFLAGS += -I module
+CFLAGS += -I module/log
 CFLAGS += -I service
 CFLAGS += -I util
 
@@ -54,7 +55,7 @@ LINK_PATH += -L 3th/lib/arm
 LD_LIBS := 
 LD_SLIBS += -lbsp
 LD_SLIBS += -lkernel
-LD_SLIBS += -lmodule
+LD_SLIBS += -lmodule_log
 LD_SLIBS += -lservice
 LD_SLIBS += -lutil
 

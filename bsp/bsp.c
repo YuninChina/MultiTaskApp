@@ -19,6 +19,7 @@
 #include "init.h"
 
 #include "bsp.h"
+#include "log.h"
 
 #ifdef  __cplusplus
 extern "C" {
@@ -34,13 +35,13 @@ extern "C" {
 
 static int bsp_init(void)
 {
-	printf("do %s ...\n",__func__);
+	INFO("do %s ...",__func__);
     return 0;
 }
 
 static void bsp_exit(void)
 {
-	printf("do %s ...\n",__func__);
+	INFO("do %s ...",__func__);
 }
 
 

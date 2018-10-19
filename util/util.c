@@ -19,6 +19,7 @@
 #include "init.h"
 
 #include "util.h"
+#include "log.h"
 
 #ifdef  __cplusplus
 extern "C" {
@@ -32,13 +33,13 @@ extern "C" {
 
 static int util_init(void)
 {
-	printf("do %s ...\n",__func__);
+	INFO("do %s ...",__func__);
     return 0;
 }
 
 static void util_exit(void)
 {
-	printf("do %s ...\n",__func__);
+	INFO("do %s ...",__func__);
 }
 
 

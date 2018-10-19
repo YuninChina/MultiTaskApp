@@ -1,4 +1,4 @@
 obj-y :=
-obj-y += module.o
+obj-y += log/
 
 

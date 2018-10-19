@@ -19,6 +19,7 @@
 #include "init.h"
 
 #include "kernel.h"
+#include "log.h"
 
 #ifdef  __cplusplus
 extern "C" {
@@ -32,18 +33,18 @@ extern "C" {
 
 static int kernel_init(void)
 {
-	printf("do %s ...\n",__func__);
+	INFO("do %s ...",__func__);
     return 0;
 }
 
 static void kernel_exit(void)
 {
-	printf("do %s ...\n",__func__);
+	INFO("do %s ...",__func__);
 }
 
 
-cores_init(kernel_init);
-cores_exit(kernel_exit);
+primarys_init(kernel_init);
+primarys_exit(kernel_exit);
 
 
 #ifdef  __cplusplus
