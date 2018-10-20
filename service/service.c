@@ -20,6 +20,7 @@
 
 #include "service.h"
 #include "log.h"
+#include "diagnosis.h"
 
 #ifdef  __cplusplus
 extern "C" {
@@ -33,6 +34,10 @@ extern "C" {
 static int service_init(void)
 {
 	INFO("do %s ...",__func__);
+	ASSERT(0 == service_idle_init());
+	ASSERT(0 == service_master_init());
+	//
+	ASSERT(0 == task_start());
     return 0;
 }
 

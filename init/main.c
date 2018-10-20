@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-#include <stdio.h>
 
+#include "diagnosis.h"
 #include "init.h"
 #include "glib.h"
 #include "log.h"

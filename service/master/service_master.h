@@ -1,11 +1,11 @@
 /**
   ******************************************************************************
-  * @file task.h 
+  * @file service_master.h 
   * @author leon.xie
   * @version v1.0.0
-  * @date 2018-10-20 9:54:33
+  * @date 2018-10-20 13:51:29
   * @brief This file contains all the functions prototypes for the BOARD 
-  *  task 
+  *  service_master 
   ******************************************************************************
   * @attention
   *
@@ -17,47 +17,28 @@
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 
-#ifndef __TASK_H
-#define __TASK_H
+#ifndef __SERVICE_MASTER_H
+#define __SERVICE_MASTER_H
 
 /* Includes ------------------------------------------------------------------*/
 
 #include "configs.h" 
 #include "type.h" 
-#include "msg.h" 
+#include "service.h"
 
 #ifdef  __cplusplus
 extern "C" {
 #endif
 
 /* Exported typedef ----------------------------------------------------------*/
-typedef void (*task_init_t)(int order);
-typedef void (*task_run_t)(msg_t *msg_header,void *msg_data);
-
 /* Exported variables --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
-typedef enum {
-	TASK_IDLE,
-	TASK_MASTER,
-	TASK_BUTT
-}task_id_e;
-
-typedef enum {
-	TASK_ORDER_BEFORE_INIT,
-	TASK_ORDER_INIT,
-	TASK_ORDER_RUN,
-	TASK_ORDER_BUTT
-}task_order_e;
-
 /* Exported functions ------------------------------------------------------- */
-GAsyncQueue *task_async_queue_get(U32 task_id);
-int task_register(U32 task_id,const char *task_name,task_init_t init,task_run_t run);
-int task_start(void);
 
 #ifdef  __cplusplus
 }
 #endif
 
-#endif  /* __TASK_H */
+#endif  /* __SERVICE_MASTER_H */
 
 
