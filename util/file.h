@@ -46,6 +46,7 @@ int file_write_str(const char *path, const char *str, mode_t mode);
 int file_read_buf(const char *file, char *buf, int len);
 off_t file_size_get(const char *path, int fd);
 int file_write_atomic(const char *path, const void *data, int len, mode_t mode);
+int file_rewrite_atomic(const char *path, const void *data, int len, mode_t mode);
 int file_read_atomic(const char *file,void *data, int len);
 void trace2file(const char *filename,const char *fmt,...);
 int read_txt_string(const char *path,const char *member,char *outputValue,unsigned int size);

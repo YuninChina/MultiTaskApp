@@ -17,8 +17,13 @@
 /* Includes ------------------------------------------------------------------*/
 #include <stdio.h>
 #include <string.h>
-#include <unistd.h>
 #include <sys/prctl.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <stdarg.h>
 
 #include "glib.h"
 #include "log.h"
@@ -38,6 +43,9 @@ extern "C" {
 #define LOG_BUFFER_LEN	4096
 #define LOG_TASK_NAME_LEN 128
 /* Private variables ---------------------------------------------------------*/
+#if defined(CONFIG_LOG_ENABLE)
+static int g_logFd = -1;
+#endif
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 static const gchar *_log_level_string(int level)
@@ -58,6 +66,29 @@ static const gchar *_log_level_string(int level)
 	}
 	return ret;
 }
+
+#if defined(CONFIG_LOG_ENABLE)
+static void _write_log2file(const char *logBuf)
+{
+	RETURN_IF_FAIL(logBuf);
+	size_t count = strlen(logBuf);
+	char *tmp = (char *)logBuf;
+	
+	while (count > 0) {
+		ssize_t r = write(g_logFd, tmp, count);
+
+		if (r < 0 && errno == EINTR)
+			continue;
+		if (r < 0)
+			return ;
+		if (r == 0)
+			return ;
+		tmp = (char *)tmp + r;
+		count -= r;
+	}
+}
+
+#endif
 
 static void _log_hander(const gchar   *log_domain,
         GLogLevelFlags log_level,
@@ -129,21 +160,21 @@ static void _log_hander(const gchar   *log_domain,
 	&& G_LOG_LEVEL_MESSAGE != log_level)
 	{
 		/* [colour]-time-task-level-message-[non-colour] */
-		snprintf(buffer,sizeof(buffer),"%s%s(%s)%s: %s%s",
+		snprintf(buffer,sizeof(buffer),"%s%s(%s)%s: %s%s\n",
 				colour_str,time_str,task_name,level_str,message,non_colour_str);
 	}
 	else
 	{
 		/* [colour]task-level-message-[non-colour] */
-		snprintf(buffer,sizeof(buffer),"%s(%s)%s: %s%s",
+		snprintf(buffer,sizeof(buffer),"%s(%s)%s: %s%s\n",
 				colour_str,task_name,level_str,message,non_colour_str);
 	}
 	buffer[sizeof(buffer)-1] = 0;
 	//output
 	#if defined(CONFIG_LOG_ENABLE)
-	ASSERT(0);
+	_write_log2file(buffer);
 	#else
-	printf("%s%s%s\n",colour_str,buffer,non_colour_str);
+	printf("%s%s%s",colour_str,buffer,non_colour_str);
 	#endif
 }
 
@@ -160,6 +191,10 @@ static void _log_hander(const gchar   *log_domain,
 static int log_init(void)
 {
 	printf("do %s ...\n",__func__);
+#if defined(CONFIG_LOG_ENABLE)
+	g_logFd = open(LOG_FILENAME, O_WRONLY|O_APPEND|O_CREAT, 0777);
+	RETURN_VAL_IF_FAIL(g_logFd > 0, -1);
+#endif
 	g_log_set_default_handler(_log_hander,NULL);
     return 0;
 }
@@ -175,7 +210,13 @@ static int log_init(void)
  **************************************************/
 static void log_exit(void)
 {
-
+#if defined(CONFIG_LOG_ENABLE)
+	if(g_logFd > 0)
+	{
+		close(g_logFd);
+		g_logFd = -1;
+	}
+#endif
 }
 
 /***************************************************
@@ -275,7 +316,7 @@ void log_assert(const char *source
 	_log_buffer[sizeof(_log_buffer)-1] = 0;
 	//output
 #if defined(CONFIG_LOG_ENABLE)	
-	ASSERT(0);
+	_write_log2file(_log_buffer);
 #else
 	printf(_log_buffer);
 #endif		

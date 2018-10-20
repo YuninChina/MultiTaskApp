@@ -98,6 +98,30 @@ file_write_atomic(const char *path, const void *data, int len, mode_t mode)
     return 0;
 }
 
+int
+file_rewrite_atomic(const char *path, const void *data, int len, mode_t mode)
+{
+    int fd;
+
+    if (mode)
+        fd = open(path, O_WRONLY|O_CREAT, mode);
+    else
+        fd = open(path, O_WRONLY);
+    if (fd == -1)
+        return -1;
+
+    if (file_write(fd, data, len) < 0) {
+        close(fd);
+        return -1;
+    }
+
+    /* Use errno from failed close only if there was no write error.  */
+    if (close(fd) != 0)
+        return -1;
+
+    return 0;
+}
+
 
 int
 file_read_atomic(const char *file,void *data, int len)

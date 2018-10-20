@@ -32,6 +32,7 @@ extern "C" {
 /* Exported typedef ----------------------------------------------------------*/
 /* Exported variables --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
+#define LOG_FILENAME	"app.log"
 /* Exported functions ------------------------------------------------------- */
 //log
 #define DEBUG_INT(filename, linenr, funcname, args...)             \
