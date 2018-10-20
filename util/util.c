@@ -16,10 +16,22 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <stdarg.h>
+#include <ctype.h>
+
 #include "init.h"
 
 #include "util.h"
 #include "log.h"
+#include "file.h"
 
 #ifdef  __cplusplus
 extern "C" {
@@ -31,20 +43,57 @@ extern "C" {
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
-static int util_init(void)
+
+int str2enum(const char *const*types,
+				unsigned int ntypes,
+				const char *type)
 {
-	INFO("do %s ...",__func__);
-    return 0;
+	size_t i;
+	if (!type)
+		return -1;
+
+	for (i = 0; i < ntypes; i++){
+		if (0 == strcmp(types[i], type))
+			return i;
+	}
+
+	return -1;
 }
 
-static void util_exit(void)
+const char * enum2str(const char *const*types,
+						unsigned int ntypes,
+						int type)
 {
-	INFO("do %s ...",__func__);
+	if (type < 0 || type >= ntypes)
+		return NULL;
+
+	return types[type];
 }
 
 
-modules_init(util_init);
-modules_exit(util_exit);
+void skip_spaces(const char **str)
+{
+    const char *cur = *str;
+
+    while (isspace(*cur))
+        cur++;
+    *str = cur;
+}
+
+void truncated_spaces(char *str)
+{
+    char *cur = str;
+    while (!isspace(*cur))
+        cur++;
+    *cur=0;
+}
+
+
+void screen_clear(void)
+{
+#define SCREEN_CLEAR "\033[H""\033[J"
+	file_write(STDOUT_FILENO,(void *)SCREEN_CLEAR,strlen(SCREEN_CLEAR));
+}
 
 
 #ifdef  __cplusplus
