@@ -40,7 +40,7 @@ static void main_loop_start(void)
 
 //===============================================================================
 #undef VERSIONS
-#define VERSIONS	"0.0.3"
+#define VERSIONS	"0.0.6"
 static void version_usage(void)
 {
 	MESSAGE("###########################################");
