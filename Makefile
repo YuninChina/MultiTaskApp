@@ -55,9 +55,12 @@ LINK_PATH += -L 3th/lib/arm
 LD_LIBS := 
 LD_SLIBS += -lbsp
 LD_SLIBS += -lkernel
-LD_SLIBS += -lmodule_log
 LD_SLIBS += -lservice
 LD_SLIBS += -lutil
+LD_SLIBS += -lmodule_log
+LD_SLIBS += -lmodule_json
+LD_SLIBS += -lmodule_xml
+LD_SLIBS += -lmodule_media
 
 LD_DLIBS += -lglib-2.0
 LD_DLIBS += -lpthread
