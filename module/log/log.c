@@ -282,8 +282,8 @@ void log_assert(const char *source
 }
 
 
-cores_init(log_init);
-cores_exit(log_exit);
+pures_init(log_init);
+pures_exit(log_exit);
 
 #ifdef  __cplusplus
 }

@@ -79,6 +79,7 @@ typedef void (*exitcall_t)(void);
 #define service_initcall(fn)	__define_initcall("6",fn,6)
 #define late_initcall(fn)		__define_initcall("7",fn,7)
 
+#define __purecall(fn) 		pure_initcall(fn)
 #define __corecall(fn) 		core_initcall(fn)
 #define __primarycall(fn) 	primary_initcall(fn)
 #define __bspcall(fn) 		bsp_initcall(fn)
@@ -90,34 +91,37 @@ typedef void (*exitcall_t)(void);
 #define __exitcall(fn) \
 	static exitcall_t __exitcall_##fn __exit_call = fn
 
+//
+#define pures_init(x)	__purecall(x)
+#define pures_exit(x)	__exitcall(x)
 
 //核心模块初始化
-#define cores_init(x)	__corecall(x);
-#define cores_exit(x)	__exitcall(x);
+#define cores_init(x)	__corecall(x)
+#define cores_exit(x)	__exitcall(x)
 
 //初级模块初始化
-#define primarys_init(x)	__primarycall(x);
-#define primarys_exit(x)	__exitcall(x);
+#define primarys_init(x)	__primarycall(x)
+#define primarys_exit(x)	__exitcall(x)
 
 //BSP模块初始化
-#define bsps_init(x)	__bspcall(x);
-#define bsps_exit(x)	__exitcall(x);
+#define bsps_init(x)	__bspcall(x)
+#define bsps_exit(x)	__exitcall(x)
 
 //子系统模块初始化
-#define subsys_init(x)	__subsyscall(x);
-#define cores_exit(x)	__exitcall(x);
+#define subsys_init(x)	__subsyscall(x)
+#define cores_exit(x)	__exitcall(x)
 
 // 模块初始化
-#define modules_init(x)	__modulecall(x);
-#define modules_exit(x)	__exitcall(x);
+#define modules_init(x)	__modulecall(x)
+#define modules_exit(x)	__exitcall(x)
 
 //业务初始化
-#define services_init(x)	__servicecall(x);
-#define services_exit(x)	__exitcall(x);
+#define services_init(x)	__servicecall(x)
+#define services_exit(x)	__exitcall(x)
 
 //
-#define lates_init(x)	__latecall(x);
-#define lates_exit(x)	__exitcall(x);
+#define lates_init(x)	__latecall(x)
+#define lates_exit(x)	__exitcall(x)
 
 
 #ifdef  __cplusplus

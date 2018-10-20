@@ -21,7 +21,7 @@
 #define __TYPE_H
 
 /* Includes ------------------------------------------------------------------*/
-
+#include <stdbool.h>
 
 #ifdef  __cplusplus
 extern "C" {
@@ -35,6 +35,10 @@ extern "C" {
 
 #undef SUCC
 #define SUCC 0
+
+#ifndef BOOL
+#define BOOL bool
+#endif
 
 #undef TRUE
 #define TRUE 1
@@ -59,6 +63,21 @@ extern "C" {
 #define COLOUR_L_CYAN	"\e[1;36m"
 #define COLOUR_GRAY		"\e[0;37m"
 #define COLOUR_WHITE	"\e[1;37m"
+
+
+typedef char S8;
+typedef unsigned char U8;
+typedef short S16;
+typedef unsigned short U16;
+typedef int S32;
+typedef unsigned int U32;
+typedef long L32;
+typedef unsigned long UL32;
+typedef signed long long L64;
+typedef unsigned long long UL64;
+typedef float F32;
+typedef double D64;
+
 
 /* Exported functions ------------------------------------------------------- */
 

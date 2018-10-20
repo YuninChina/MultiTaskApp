@@ -43,8 +43,8 @@ static void kernel_exit(void)
 }
 
 
-primarys_init(kernel_init);
-primarys_exit(kernel_exit);
+cores_init(kernel_init);
+cores_exit(kernel_exit);
 
 
 #ifdef  __cplusplus
