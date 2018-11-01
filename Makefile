@@ -4,7 +4,7 @@ PHONY : all
 
 TARGET_NAME ?= bin/MultiTaskApp
 
-CROSS_COMPILE ?= arm-hisiv400-linux-
+CROSS_COMPILE ?=
 
 AS	= $(CROSS_COMPILE)as
 LD	= $(CROSS_COMPILE)ld
