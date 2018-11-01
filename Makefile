@@ -51,7 +51,12 @@ endif
 
 TEST_CFLAGS ?= ${CFLAGS}
 LINK_PATH := -L libs
+ifeq ($(CROSS_COMPILE),arm-hisiv400-linux-)
 LINK_PATH += -L 3th/lib/arm
+else
+LINK_PATH += -L 3th/lib/x86
+endif
+
 LD_LIBS := 
 LD_SLIBS += -lbsp
 LD_SLIBS += -lkernel
@@ -62,7 +67,8 @@ LD_SLIBS += -lmodule_json
 LD_SLIBS += -lmodule_xml
 LD_SLIBS += -lmodule_media
 
-LD_DLIBS += -lglib-2.0
+LD_SLIBS += -lglib-2.0
+# 
 LD_DLIBS += -lpthread
 LD_DLIBS += -lrt
 
