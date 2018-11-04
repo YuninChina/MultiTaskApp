@@ -260,12 +260,12 @@ int log_message(guint32 priority,
 	switch(priority)
 	{
 		case G_LOG_FLAG_FATAL: 
-		case G_LOG_LEVEL_ERROR: g_error(message);break;
-		case G_LOG_LEVEL_CRITICAL: g_critical(message);break;
-		case G_LOG_LEVEL_WARNING: g_warning(message);break;
-		case G_LOG_LEVEL_MESSAGE: g_message(message);break;
-		case G_LOG_LEVEL_INFO: g_info(message);break;
-		case G_LOG_LEVEL_DEBUG: g_debug(message);break;
+		case G_LOG_LEVEL_ERROR: g_error("%s",message);break;
+		case G_LOG_LEVEL_CRITICAL: g_critical("%s",message);break;
+		case G_LOG_LEVEL_WARNING: g_warning("%s",message);break;
+		case G_LOG_LEVEL_MESSAGE: g_message("%s",message);break;
+		case G_LOG_LEVEL_INFO: g_info("%s",message);break;
+		case G_LOG_LEVEL_DEBUG: g_debug("%s",message);break;
 		case G_LOG_FLAG_RECURSION:
 		default: g_return_val_if_fail(0,FAIL);
 	}
@@ -318,7 +318,7 @@ void log_assert(const char *source
 #if defined(CONFIG_LOG_ENABLE)	
 	_write_log2file(_log_buffer);
 #else
-	printf(_log_buffer);
+	printf("%s",_log_buffer);
 #endif		
 }
 
