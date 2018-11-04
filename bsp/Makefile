@@ -1,4 +1,4 @@
 
 obj-y :=
-obj-y += bsp.o
+obj-y += chip.o
 

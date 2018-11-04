@@ -1,11 +1,11 @@
 /**
   ******************************************************************************
-  * @file bsp.h 
+  * @file chip.h 
   * @author leon.xie
   * @version v1.0.0
-  * @date 2018-10-19 22:14:14
+  * @date 2018-11-4 21:48:08
   * @brief This file contains all the functions prototypes for the BOARD 
-  *  bsp 
+  *  chip 
   ******************************************************************************
   * @attention
   *
@@ -17,8 +17,8 @@
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 
-#ifndef __BSP_H
-#define __BSP_H
+#ifndef __CHIP_H
+#define __CHIP_H
 
 /* Includes ------------------------------------------------------------------*/
 
@@ -38,6 +38,6 @@ extern "C" {
 }
 #endif
 
-#endif  /* __BSP_H */
+#endif  /* __CHIP_H */
 
 
