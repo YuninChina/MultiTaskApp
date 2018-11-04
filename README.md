@@ -31,3 +31,7 @@
 
 ![image](https://github.com/YuninChina/LinuxMultitaskApp/blob/develop_local/docs/cpu.png)
 
+# 6. 模块
+> 同层模块之间尽量避免直接交互,或接口调用.
+
+![image](https://github.com/YuninChina/LinuxMultitaskApp/blob/develop_local/docs/module_callback.png)
