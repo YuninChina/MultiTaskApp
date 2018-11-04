@@ -18,7 +18,7 @@ OBJDUMP = $(CROSS_COMPILE)objdump
 RANLIB	= $(CROSS_COMPILE)RANLIB
 
 CFLAGS =
-CFLAGS += -rdynamic -pipe -O2 -Wall 
+CFLAGS += -rdynamic -fPIC -pipe -O2 -Wall 
 CFLAGS += -I 3th/include
 CFLAGS += -I 3th/include/glib-2.0
 CFLAGS += -I 3th/include/gio-unix-2.0
@@ -66,6 +66,7 @@ LD_SLIBS += -lmodule_log
 LD_SLIBS += -lmodule_json
 LD_SLIBS += -lmodule_xml
 LD_SLIBS += -lmodule_media
+LD_SLIBS += -lmodule_net
 
 LD_SLIBS += -lglib-2.0
 # 
