@@ -48,6 +48,9 @@ typedef struct msg_s{
 
 /* Exported variables --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
+
+//消息队列最大长度
+#define MSG_QUEUE_MAX	50
 /* Exported functions ------------------------------------------------------- */
 int msg_send(msg_t *msg);
 

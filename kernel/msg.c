@@ -65,14 +65,14 @@ int msg_send(msg_t *msg)
 		return FAIL;
 	}
 	q = task_async_queue_get(msg->dest_task_id);
-	if(!q)
-	{
-		ASSERT(0);
-		free(msg);
-		return FAIL;
-	}
+	GOTO_LABEL_IF_FAIL(NULL != q, fail);
+	GOTO_LABEL_IF_FAIL(g_async_queue_length(q) < MSG_QUEUE_MAX, fail);
 	g_async_queue_push_sorted(q, (gpointer)msg,_msg_priority_compare_func,NULL);
 	return SUCC;
+
+fail:
+	free(msg);
+	return FAIL;
 }
 
 
