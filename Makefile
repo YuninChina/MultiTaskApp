@@ -74,7 +74,7 @@ LD_SLIBS += -lglib-2.0
 LD_DLIBS += -lpthread
 LD_DLIBS += -lrt
 
-export TEST_CFLAGS LINK_PATH LD_LIBS
+export TEST_CFLAGS LINK_PATH LD_SLIBS LD_DLIBS LD_LIBS
 
 MAKEFILE_BUILD := script/Makefile.build
 MAKEFILE_TEST_BUILD := script/Makefile.test.build

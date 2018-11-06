@@ -1,10 +1,10 @@
 /**
   ******************************************************************************
-  * @file test.c
+  * @file test_client.c
   * @author  leon.xie
   * @version v1.0.0
-  * @date 2018-10-20 13:37:04
-  * @brief  This file provides all the test functions. 
+  * @date 2018-11-6 22:24:03
+  * @brief  This file provides all the test_client functions. 
   ******************************************************************************
   * @attention
   *
@@ -15,7 +15,12 @@
   */ 
 
 /* Includes ------------------------------------------------------------------*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
 
+#include "glib.h"
 
 #ifdef  __cplusplus
 extern "C" {
@@ -28,8 +33,7 @@ extern "C" {
 /* Private functions ---------------------------------------------------------*/
 
 
-int
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
 	return 0;
 }

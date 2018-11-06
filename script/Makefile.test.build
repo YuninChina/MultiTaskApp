@@ -27,7 +27,7 @@ __build: ${builtin-target} $(subdir-y) FORCE
 ifdef builtin-target
 $(builtin-target): FORCE
 	$(if ${obj-y},mkdir -p ./bin)
-	$(if ${obj-y},$(CC) ${TEST_CFLAGS} ${LINK_PATH} -T ${LD_SCRIPT} -o $@ $@.c ${LINK_STATIC} ${LD_LIBS} ${LINK_SHARED})
+	$(if ${obj-y},$(CC) ${TEST_CFLAGS} ${LINK_PATH} -T ${LD_SCRIPT} -o $@ $@.c ${LINK_STATIC} ${LD_SLIBS} ${LINK_SHARED} ${LD_DLIBS})
 	$(if ${obj-y},install -p -m 0555 $@ ./bin)
 endif # builtin-target
 
