@@ -10,23 +10,8 @@
 #include "init.h"
 #include "glib.h"
 #include "log.h"
+#include "kernel.h"
 
-//===============================================================================
-extern initcall_t __initcall_start[], __initcall_end[];
-static void initcalls(void)
-{
-	initcall_t *call;
-	int result;
-	INFO("%s do init call (%d)...", __func__,__initcall_end-__initcall_start);
-	for (call = __initcall_start; call < __initcall_end; call++) 
-	{
-		result = (*call)();
-		if(result < 0)
-		{
-			ERROR("do_initcalls(%p): error code %d\n", call,result);
-		}
-	}
-}
 
 //===============================================================================
 static GMainLoop *g_mainLoop = NULL;
@@ -54,7 +39,7 @@ int
 main(int argc, char *argv[])
 {
 	version_usage();
-	initcalls();
+	kernel_init();
 	main_loop_start();
 	return 0;
 }

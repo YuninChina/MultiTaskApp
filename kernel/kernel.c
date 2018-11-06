@@ -19,6 +19,8 @@
 #include "init.h"
 
 #include "kernel.h"
+#include "diagnosis.h"
+#include "init.h"
 #include "log.h"
 
 #ifdef  __cplusplus
@@ -31,20 +33,33 @@ extern "C" {
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
-static int kernel_init(void)
+//===============================================================================
+extern initcall_t __initcall_start[], __initcall_end[];
+static void initcalls(void)
 {
-	INFO("do %s ...",__func__);
-    return 0;
+	initcall_t *call;
+	int result;
+	MESSAGE("%s do init call (%d)...", __func__,__initcall_end-__initcall_start);
+	for (call = __initcall_start; call < __initcall_end; call++) 
+	{
+		result = (*call)();
+		if(result < 0)
+		{
+			ERROR("do_initcalls(%p): error code %d\n", call,result);
+		}
+	}
 }
 
-static void kernel_exit(void)
+void kernel_init(void)
 {
-	INFO("do %s ...",__func__);
+	MESSAGE("do %s ...",__func__);
+	initcalls();
 }
 
-
-cores_init(kernel_init);
-cores_exit(kernel_exit);
+void kernel_exit(void)
+{
+	MESSAGE("do %s ...",__func__);
+}
 
 
 #ifdef  __cplusplus
