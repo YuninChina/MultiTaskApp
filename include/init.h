@@ -63,22 +63,19 @@ typedef void (*exitcall_t)(void);
 	static initcall_t __initcall_##fn##id __attribute_used__ \
 	__attribute__((__section__(".initcall" level ".init"))) = fn
 
-/*
- * A "pure" initcall has no dependencies on anything else, and purely
- * initializes variables that couldn't be statically initialized.
- *
- * This only exists for built-in code, not for modules.
- */
-#define pure_initcall(fn)		__define_initcall("0",fn,0)
+/*============================================================*/
+#define system_initcall(fn)		__define_initcall("0",fn,0)
 
-#define core_initcall(fn)		__define_initcall("1",fn,1)
-#define primary_initcall(fn)	__define_initcall("2",fn,2)
-#define bsp_initcall(fn)		__define_initcall("3",fn,3)
-#define subsys_initcall(fn)		__define_initcall("4",fn,4)
-#define module_initcall(fn)		__define_initcall("5",fn,5)
-#define service_initcall(fn)	__define_initcall("6",fn,6)
-#define late_initcall(fn)		__define_initcall("7",fn,7)
+#define pure_initcall(fn)		__define_initcall("1",fn,1)
+#define core_initcall(fn)		__define_initcall("2",fn,2)
+#define primary_initcall(fn)	__define_initcall("3",fn,3)
+#define bsp_initcall(fn)		__define_initcall("4",fn,4)
+#define subsys_initcall(fn)		__define_initcall("5",fn,5)
+#define module_initcall(fn)		__define_initcall("6",fn,6)
+#define service_initcall(fn)	__define_initcall("7",fn,7)
+#define late_initcall(fn)		__define_initcall("8",fn,8)
 
+#define __systemcall(fn) 	system_initcall(fn)
 #define __purecall(fn) 		pure_initcall(fn)
 #define __corecall(fn) 		core_initcall(fn)
 #define __primarycall(fn) 	primary_initcall(fn)
@@ -91,7 +88,11 @@ typedef void (*exitcall_t)(void);
 #define __exitcall(fn) \
 	static exitcall_t __exitcall_##fn __exit_call = fn
 
-//
+//Linux系统级初始化
+#define systems_init(x)	__systemcall(x)
+#define systems_exit(x)	__exitcall(x)
+
+//无依赖模块初始化
 #define pures_init(x)	__purecall(x)
 #define pures_exit(x)	__exitcall(x)
 
