@@ -190,7 +190,7 @@ static void _log_hander(const gchar   *log_domain,
  **************************************************/
 static int log_init(void)
 {
-	printf("do %s ...\n",__func__);
+	MESSAGE("do %s ...\n",__func__);
 #if defined(CONFIG_LOG_ENABLE)
 	g_logFd = open(LOG_FILENAME, O_WRONLY|O_APPEND|O_CREAT, 0777);
 	RETURN_VAL_IF_FAIL(g_logFd > 0, -1);

@@ -62,6 +62,8 @@ LD_SLIBS += -lbsp
 LD_SLIBS += -lkernel
 LD_SLIBS += -lservice
 LD_SLIBS += -lutil
+
+LD_SLIBS += -lmodule_signal
 LD_SLIBS += -lmodule_log
 LD_SLIBS += -lmodule_json
 LD_SLIBS += -lmodule_xml

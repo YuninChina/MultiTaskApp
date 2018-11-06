@@ -5,4 +5,5 @@ obj-y += media/
 obj-y += xml/
 obj-y += net/
 obj-y += dummy/
+obj-y += signal/
 
