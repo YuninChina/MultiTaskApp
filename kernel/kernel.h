@@ -35,6 +35,7 @@ extern "C" {
 /* Exported functions ------------------------------------------------------- */
 void kernel_init(void);
 void kernel_exit(void);
+void main_loop_start(void);
 
 #ifdef  __cplusplus
 }

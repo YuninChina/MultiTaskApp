@@ -61,6 +61,17 @@ void kernel_exit(void)
 	MESSAGE("do %s ...",__func__);
 }
 
+//===============================================================================
+static GMainLoop *g_mainLoop = NULL;
+
+void main_loop_start(void)
+{
+	MESSAGE("Main loop ...\n");
+	g_mainLoop = g_main_new(FALSE);
+	g_main_loop_run(g_mainLoop);
+	g_main_loop_unref (g_mainLoop);
+	MESSAGE("Main exit...\n");
+}
 
 #ifdef  __cplusplus
 }
