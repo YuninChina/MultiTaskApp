@@ -71,10 +71,18 @@ LD_SLIBS += -lmodule_media
 LD_SLIBS += -lmodule_net
 LD_SLIBS += -lmodule_dummy
 
+LD_SLIBS += -lgio-2.0
+LD_SLIBS += -lgmodule-2.0
+LD_SLIBS += -lgthread-2.0
+LD_SLIBS += -lgobject-2.0
 LD_SLIBS += -lglib-2.0
 # 
 LD_DLIBS += -lpthread
 LD_DLIBS += -lrt
+LD_DLIBS += -ldl
+LD_DLIBS += -lffi
+LD_DLIBS += -lz
+LD_DLIBS += -lresolv
 
 export TEST_CFLAGS LINK_PATH LD_SLIBS LD_DLIBS LD_LIBS
 
