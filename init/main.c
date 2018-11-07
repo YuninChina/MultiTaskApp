@@ -14,7 +14,7 @@
 
 //===============================================================================
 #undef VERSIONS
-#define VERSIONS	"0.0.6"
+#define VERSIONS	"0.0.7"
 static void version_usage(void)
 {
 	MESSAGE("###########################################");
