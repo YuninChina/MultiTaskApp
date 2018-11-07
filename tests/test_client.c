@@ -38,34 +38,8 @@ extern "C" {
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
-
 int main(int argc, char *argv[])
 {
-	GSocketService *service = NULL;
-	GError *error = NULL;
-	int port = 7777;
-	if (argc != 2) {
-		ERROR("Usage: %s <port>\n",argv[0]);
-		exit(EXIT_FAILURE);
-	}
-
-	RETURN_VAL_IF_FAIL(1 == sscanf(argv[1],"%d",&port), -1);
-	
-	service = g_threaded_socket_service_new (10);
-	if (!g_socket_listener_add_inet_port (G_SOCKET_LISTENER (service),
-                                          port,
-                                          NULL,
-                                          &error)) {
-        ERROR ("%s: %s\n", argv[0], error->message);
-        return 1;
-    }
-
-    DEBUG ("Echo service listening on port %d\n", port);
-
-    //g_signal_connect (service, "run", G_CALLBACK (handler), NULL);
-    
-	//
-	main_loop_start();
 	return 0;
 }
 
