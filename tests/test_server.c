@@ -89,6 +89,7 @@ int main(int argc, char *argv[])
     
 	//
 	main_loop_start();
+	g_assert_not_reached ();
 	return 0;
 }
 
