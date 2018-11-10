@@ -299,7 +299,7 @@ void log_assert(const char *source
 	colour = COLOUR_RED;
 #endif
 
-	len += snprintf(_log_buffer+len,sizeof(_log_buffer)-len,"%s(%s): assertion failed %s: %d: %s "
+	len += snprintf(_log_buffer+len,sizeof(_log_buffer)-len,"%s(%s): assertion failed %s: %d: %s ; "
 	,colour?colour:""
 	,source ? source : threadName,
 	filename, linenr, expr?expr:"");
