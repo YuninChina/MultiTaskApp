@@ -63,8 +63,8 @@ static BOOL g_mediaModuleState = FALSE;  // 0: 模块未初始化 1:模块已初
  **************************************************/
 int media_read(media_type_e type,media_info_t *mediaOutput,L64 time)
 {
-	RETURN_VAL_IF_FAIL(TRUE == g_mediaModuleState,-1);
-	RETURN_VAL_IF_FAIL(type < MEDIA_TYPE_BUTT && mediaOutput, -1);
+	RETURN_VAL_IF_FAIL_ARGS(TRUE == g_mediaModuleState,-1,DIAGNO_STR_EUNINIT);
+	RETURN_VAL_IF_FAIL_ARGS(type < MEDIA_TYPE_BUTT && mediaOutput, -1,DIAGNO_STR_EINVAL);
 	int ret = -1;
 	if(time < 0)
 	{
@@ -103,7 +103,8 @@ int media_read(media_type_e type,media_info_t *mediaOutput,L64 time)
  **************************************************/
 int media_update(media_type_e type,media_info_t *media)
 {
-	RETURN_VAL_IF_FAIL(type < MEDIA_TYPE_BUTT && media, -1);
+	RETURN_VAL_IF_FAIL_ARGS(TRUE == g_mediaModuleState,-1,DIAGNO_STR_EUNINIT);
+	RETURN_VAL_IF_FAIL_ARGS(type < MEDIA_TYPE_BUTT && media, -1,DIAGNO_STR_EINVAL);
 	//
 	g_mutex_lock(&g_mediaInfoNodeMutexLocks[type]);
 	memcpy(&g_mediaInfoNodes[type].info,media,sizeof(media_info_t));
@@ -120,7 +121,7 @@ static int media_init(void)
 {
 	media_type_e type;
 	INFO("do %s ...",__func__);
-	RETURN_VAL_IF_FAIL(FALSE == g_mediaModuleState,-1);
+	RETURN_VAL_IF_FAIL_ARGS(FALSE == g_mediaModuleState,-1,DIAGNO_STR_EILLEGAL);
 	g_mediaModuleState = TRUE;
     memset(&g_mediaInfoNodes,0,sizeof(g_mediaInfoNodes));
 	for(type = MEDIA_TYPE_VIDEO;type < MEDIA_TYPE_BUTT;type++)
@@ -136,13 +137,13 @@ static void media_exit(void)
 {
 	media_type_e type;
 	INFO("do %s ...",__func__);
-	g_mediaModuleState = FALSE;
 	for(type = MEDIA_TYPE_VIDEO;type < MEDIA_TYPE_BUTT;type++)
 	{
 		g_cond_clear(&g_mediaInfoNodes[type].cond);
 		g_mutex_clear(&g_mediaInfoNodes[type].mutex);
 		g_mutex_clear(&g_mediaInfoNodeMutexLocks[type]);
 	}
+	g_mediaModuleState = FALSE;
 }
 
 modules_init(media_init);

@@ -108,7 +108,7 @@ extern void log_assert(const char *source
 
 #define DIAGNO_STR_EINVAL 		"Invalid argument"
 #define DIAGNO_STR_EUNINIT 		"Uninitialized"
-#define DIAGNO_STR_EMISUSE 		"Misuse"
+#define DIAGNO_STR_EILLEGAL		"Illegal operation"
 #define DIAGNO_STR_ENOMEM 		"Out of memory"
 #define DIAGNO_STR_EFAULT 		"Bad address"
 #define DIAGNO_STR_EAGAIN 		"Try again"
