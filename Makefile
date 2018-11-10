@@ -115,6 +115,14 @@ $(test_dirs): FORCE
 	@make -f ${MAKEFILE_TEST_BUILD}  obj=$@
 	
 test: $(test_dirs) FORCE
+
+tool_dirs := tools/
+tool_dirs := ${patsubst %/,%,$(filter %/, $(tool_dirs))}
+$(tool_dirs): FORCE
+	@make -f ${MAKEFILE_TEST_BUILD}  obj=$@
+	
+tool: $(tool_dirs) FORCE
+
 	
 clean:	FORCE
 	@echo  ">>> clean target"
@@ -123,6 +131,7 @@ clean:	FORCE
 	@${shell for dir in `find -maxdepth 3 -type d | grep -v git| grep -v 3th | grep -v include | grep -v \.si4project`;\
 	do rm -f $${dir}/*.o $${dir}/*.bak $${dir}/*.so $${dir}/*.a $${dir}/*.dep;done}
 	@${shell cd tests && for i in `find *.c`;do rm -f `echo $$i|sed 's/\.c//g' `;done }
+	@${shell cd tools && for i in `find *.c`;do rm -f `echo $$i|sed 's/\.c//g' `;done }
 	@rm -f bin/*
 
 distclean: clean

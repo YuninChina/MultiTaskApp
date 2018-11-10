@@ -60,7 +60,10 @@ server_handler (GThreadedSocketService *service,
         cnt++;
         if(cnt > 10)
         {
+        	//关闭连接
         	g_io_stream_close(G_IO_STREAM (connection),NULL,NULL);
+        	//退出线程.
+        	break;
         }
 	}                                            
 
