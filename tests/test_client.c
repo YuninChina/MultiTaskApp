@@ -103,12 +103,20 @@ int main(int argc, char *argv[])
             g_warning ("send error: %s\n",  error->message);
             g_error_free (error);
             error = NULL;
+            break;
         }
         sleep(1);
         cnt++;
     }
 
     g_print ("closing stream\n");
+    if (!g_io_stream_close (G_IO_STREAM (connection), NULL, &error)) {
+            g_warning ("close error: %s\n",  error->message);
+            g_error_free (error);
+            error = NULL;
+            return 1;
+    }
+    
 	return 0;
 }
 

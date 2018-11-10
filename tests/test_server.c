@@ -48,7 +48,7 @@ server_handler (GThreadedSocketService *service,
     GInputStream *in;
     char buffer[1024];
     gssize size;
-
+	int cnt = 0;
     out = g_io_stream_get_output_stream (G_IO_STREAM (connection));
     in = g_io_stream_get_input_stream (G_IO_STREAM (connection));
 
@@ -57,6 +57,11 @@ server_handler (GThreadedSocketService *service,
 	{
 		printf("recv msg from client : %s\n",buffer);
         g_output_stream_write (out, buffer, size, NULL, NULL);
+        cnt++;
+        if(cnt > 10)
+        {
+        	g_io_stream_close(G_IO_STREAM (connection),NULL,NULL);
+        }
 	}                                            
 
     return TRUE;
