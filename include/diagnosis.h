@@ -56,11 +56,11 @@ extern void log_assert(const char *source
 	}\
 })
 
-#undef RETURN_IF_FAIL_WITH_ERRNO
-#define RETURN_IF_FAIL_WITH_ERRNO(expr,errno)  ({\
+#undef RETURN_IF_FAIL_ARGS
+#define RETURN_IF_FAIL_ARGS(expr,args...)  ({\
 	if (!(expr))\
 	{\
-		log_assert(NULL,#expr,__FILE__, __LINE__,"with errno: %f(%d,%x)",(float)errno,errno,errno);\
+		log_assert(NULL,#expr,__FILE__, __LINE__,args);\
 		return;\
 	}\
 })
@@ -76,11 +76,11 @@ extern void log_assert(const char *source
 })
 
 
-#undef RETURN_VAL_IF_FAIL_WITH_ERRNO
-#define RETURN_VAL_IF_FAIL_WITH_ERRNO(expr,return_val,errno)  ({\
+#undef RETURN_VAL_IF_FAIL_ARGS
+#define RETURN_VAL_IF_FAIL_ARGS(expr,return_val,args...)  ({\
 	if (!(expr))\
 	{\
-		log_assert(NULL,#expr,__FILE__, __LINE__,"with errno: %f(%d,%x)",(float)errno,errno,errno);\
+		log_assert(NULL,#expr,__FILE__, __LINE__,args);\
 		return return_val;\
 	}\
 })
@@ -96,11 +96,11 @@ extern void log_assert(const char *source
 })
 
 
-#undef GOTO_LABEL_IF_FAIL_WITH_ERRNO
-#define GOTO_LABEL_IF_FAIL_WITH_ERRNO(expr,label,errno)  ({\
+#undef GOTO_LABEL_IF_FAIL_ARGS
+#define GOTO_LABEL_IF_FAIL_ARGS(expr,label,args...)  ({\
 	if (!(expr))\
 	{\
-		log_assert(NULL,#expr,__FILE__, __LINE__,"with errno: %f(%d,%x)",(float)errno,errno,errno);\
+		log_assert(NULL,#expr,__FILE__, __LINE__,args);\
 		goto label;\
 	}\
 })
