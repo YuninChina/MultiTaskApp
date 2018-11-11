@@ -53,7 +53,7 @@ server_handler (GThreadedSocketService *service,
     in = g_io_stream_get_input_stream (G_IO_STREAM (connection));
 
     while (0 < (size = g_input_stream_read (in, buffer,
-                                            sizeof buffer, NULL, NULL)))
+                                            sizeof(buffer), NULL, NULL)))
 	{
 		printf("recv msg from client : %s\n",buffer);
         g_output_stream_write (out, buffer, size, NULL, NULL);

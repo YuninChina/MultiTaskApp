@@ -36,8 +36,10 @@ extern "C" {
 
 /* Exported typedef ----------------------------------------------------------*/
 typedef struct _server_s server_t;
-
 typedef bool (*server_hander_t)(GThreadedSocketService *,GSocketConnection *,GSocketListener *,gpointer user_data);
+
+typedef struct _client_s client_t;
+
 /* Exported variables --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 //默认服务器端口号
@@ -65,6 +67,61 @@ server_t *server_create(int port,int max_threads,server_hander_t callback,gpoint
  * Modify : none
  **************************************************/
 void server_destroy(server_t *server);
+
+/***************************************************
+ * Function : socket_address2string
+ * Author : leon.xie
+ * Creat Date : 2018/11/11  17:51:16
+ * Description : 将网络地址信息转换为字符串
+ * In-Parameter : as below
+ * Return : as below
+ * Modify : none
+ **************************************************/
+int socket_address2string(GSocketAddress *address,char *strOutput,U32 strLen);
+
+/***************************************************
+ * Function : client_create
+ * Author : leon.xie
+ * Creat Date : 2018/11/11  11:33:32
+ * Description : 创建客户端
+ * In-Parameter : as below
+ * Return : as below
+ * Modify : none
+ **************************************************/
+client_t *client_create(char *addr,int port,U32 timeout);
+
+/***************************************************
+ * Function : client_destroy
+ * Author : leon.xie
+ * Creat Date : 2018/11/11  11:33:54
+ * Description : 销毁客户端
+ * In-Parameter : as below
+ * Return : as below
+ * Modify : none
+ **************************************************/
+void client_destroy(client_t *client);
+
+/***************************************************
+ * Function : client_write
+ * Author : leon.xie
+ * Creat Date : 2018/11/11  18:31:7
+ * Description : 向服务端写数据
+ * In-Parameter : as below
+ * Return : as below
+ * Modify : none
+ **************************************************/
+int client_write(client_t *client,void *data,U32 size);
+
+/***************************************************
+ * Function : client_read
+ * Author : leon.xie
+ * Creat Date : 2018/11/11  18:35:43
+ * Description : none
+ * In-Parameter : 读服务端数据
+ * Return : as below
+ * Modify : none
+ **************************************************/
+int client_read(client_t *client,void *data,U32 size);
 
 #ifdef  __cplusplus
 }
