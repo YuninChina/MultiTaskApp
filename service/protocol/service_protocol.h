@@ -1,11 +1,11 @@
 /**
   ******************************************************************************
-  * @file service.h 
+  * @file service_protocol.h 
   * @author leon.xie
   * @version v1.0.0
-  * @date 2018-10-20 13:48:29
+  * @date 2018-11-11 18:55:55
   * @brief This file contains all the functions prototypes for the BOARD 
-  *  service 
+  *  service_protocol 
   ******************************************************************************
   * @attention
   *
@@ -17,19 +17,14 @@
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 
-#ifndef __SERVICE_H
-#define __SERVICE_H
+#ifndef __SERVICE_PROTOCOL_H
+#define __SERVICE_PROTOCOL_H
 
 /* Includes ------------------------------------------------------------------*/
 
 #include "configs.h" 
 #include "type.h" 
-
-#include "diagnosis.h"
-#include "log.h"
-#include "task.h"
-#include "msg.h"
-#include "util.h"
+#include "service.h"
 
 #ifdef  __cplusplus
 extern "C" {
@@ -39,17 +34,11 @@ extern "C" {
 /* Exported variables --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-int service_idle_init(void);
-void service_idle_exit(void);
-int service_master_init(void);
-void service_master_exit(void);
-int service_protocol_init(void);
-void service_protocol_exit(void);
 
 #ifdef  __cplusplus
 }
 #endif
 
-#endif  /* __SERVICE_H */
+#endif  /* __SERVICE_PROTOCOL_H */
 
 

@@ -36,7 +36,7 @@ extern "C" {
 
 /* Exported typedef ----------------------------------------------------------*/
 typedef struct _server_s server_t;
-typedef bool (*server_hander_t)(GThreadedSocketService *,GSocketConnection *,GSocketListener *,gpointer user_data);
+typedef gboolean (*server_hander_t)(GThreadedSocketService *,GSocketConnection *,GSocketListener *,gpointer user_data);
 
 typedef struct _client_s client_t;
 

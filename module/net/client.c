@@ -70,7 +70,7 @@ client_t *client_create(char *addr,int port,U32 timeout)
 	address = g_socket_connection_get_remote_address (connection, &error);
 	GOTO_LABEL_IF_FAIL_ARGS(address, fail,"Error getting remote address: %s",error->message);
 	GOTO_LABEL_IF_FAIL_ARGS(0 == socket_address2string(address,addrBuf,sizeof(addrBuf)),fail2,"socket_address2string fail");
-	MESSAGE("Connected to address: %s\n",addrBuf);
+	MESSAGE("Connected to address: %s",addrBuf);
     g_object_unref (address);
     in = g_io_stream_get_input_stream (G_IO_STREAM (connection));
 	out = g_io_stream_get_output_stream (G_IO_STREAM (connection));
@@ -134,7 +134,7 @@ int client_write(client_t *client,void *data,U32 size)
 	{
 		if(error)
 		{
-            WARN ("send error: %s\n",  error->message);
+            WARN ("send error: %s",  error->message);
             g_error_free (error);
             error = NULL;
 		}
@@ -160,7 +160,7 @@ int client_read(client_t *client,void *data,U32 size)
 	{
 		if(error)
 		{
-            WARN ("send error: %s\n",  error->message);
+            WARN ("send error: %s",  error->message);
             g_error_free (error);
             error = NULL;
 		}

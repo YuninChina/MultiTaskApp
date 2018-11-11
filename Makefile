@@ -28,6 +28,8 @@ CFLAGS += -I include
 CFLAGS += -I kernel
 CFLAGS += -I module
 CFLAGS += -I module/log
+CFLAGS += -I module/media
+CFLAGS += -I module/net
 CFLAGS += -I service
 CFLAGS += -I util
 

@@ -39,6 +39,7 @@ typedef void (*task_run_t)(msg_t *msg_header,void *msg_data);
 typedef enum {
 	TASK_IDLE,
 	TASK_MASTER,
+	TASK_PROTOCOL,
 	TASK_BUTT
 }task_id_e;
 
