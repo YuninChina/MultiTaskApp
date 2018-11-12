@@ -28,95 +28,77 @@
 #include "init.h"
 #include "log.h"
 #include "kernel.h"
+#include "net.h"
 
 #ifdef  __cplusplus
 extern "C" {
 #endif
 
 /* Private typedef -----------------------------------------------------------*/
+typedef struct test_client_info_s {
+	union {
+		char ip[16];
+		char url[16];
+		char domain[16];
+	};
+	int port;
+}test_client_info_t;
+
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
+static test_client_info_t __testClientInfo;
+
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
-static char *
-socket_address_to_string (GSocketAddress *address)
+static gpointer __test_client_thread_routine(gpointer data)
 {
-    GInetAddress *inet_address;
-    char *str, *res;
-    int port;
-
-    inet_address = g_inet_socket_address_get_address (G_INET_SOCKET_ADDRESS (address));
-    str = g_inet_address_to_string (inet_address);
-    port = g_inet_socket_address_get_port (G_INET_SOCKET_ADDRESS (address));
-    res = g_strdup_printf ("%s:%d", str, port);
-    g_free (str);
-    return res;
+	INFO("task client_thread start...");
+	test_client_info_t *testClient = (test_client_info_t *)data;
+	RETURN_VAL_IF_FAIL_ARGS(testClient, NULL,DIAGNO_STR_EINVAL);
+	client_t *client = NULL;
+    char send_buffer[1024] = {0};
+    char recv_buffer[1024] = {0};
+    int cnt = 0;
+    
+	client = client_create(testClient->ip,testClient->port,2);
+	RETURN_VAL_IF_FAIL_ARGS(client, NULL,"client_create fail...");
+	while(1)
+	{
+		snprintf(send_buffer,sizeof(send_buffer),"say hello: %d",cnt++);
+		GOTO_LABEL_IF_FAIL_ARGS(client_write(client,send_buffer,sizeof(send_buffer)) >= 0,
+		over,"client_write fail...");
+		printf("client_write %s\n",send_buffer);
+		GOTO_LABEL_IF_FAIL_ARGS(client_read(client,recv_buffer,sizeof(recv_buffer)) >= 0,
+		over,"client_read fail...");
+		printf("recv msg from server : %s\n",recv_buffer);
+		sleep(1);
+	}
+	
+over:
+	ERROR("thread client_thread exit...");
+	client_destroy(client);
+	return NULL;
 }
 
 int main(int argc, char *argv[])
 {
-	GSocketClient *client = NULL;
 	char *serverAddr = NULL;
-	GSocketConnection *connection = NULL;
-	GError *error = NULL;
-	GSocketAddress *address = NULL;
-	GOutputStream *out = NULL;
 	int port = 6666;
-	char buffer[1000] = {0};
-	int cnt = 0;
 	
 	if (argc != 3) {
 		ERROR("Usage: %s <addr> <port>\n",argv[0]);
 		exit(EXIT_FAILURE);
 	}
-	//
+	bzero(&__testClientInfo,sizeof(__testClientInfo));
 	serverAddr = argv[1];
 	port = atoi(argv[2]);
-	//
-	client = g_socket_client_new ();
-	RETURN_VAL_IF_FAIL(client, -1);
-	g_socket_client_set_timeout (client, 0);
-	connection = g_socket_client_connect_to_host (client,
-                     serverAddr,
-                     port,
-                     NULL,&error);
-	RETURN_VAL_IF_FAIL(connection, -1);
-	g_object_unref (client);
-	address = g_socket_connection_get_remote_address (connection, &error);
-    if (!address) {
-        g_printerr ("Error getting remote address: %s\n",
-                    error->message);
-        return 1;
-    }
-    g_print ("Connected to address: %s\n",
-             socket_address_to_string (address));
-    g_object_unref (address);
-
-    out = g_io_stream_get_output_stream (G_IO_STREAM (connection));
-	RETURN_VAL_IF_FAIL(out, -1);
+	strncpy(__testClientInfo.ip,serverAddr,sizeof(__testClientInfo.ip));
+	__testClientInfo.port = port;
 	
-    while (1) {
-        /* FIXME if (async) */
-        sprintf(buffer,"hello world %d",cnt);
-        if (!g_output_stream_write_all (out, buffer, strlen (buffer),
-                                        NULL, NULL, &error)) {
-            g_warning ("send error: %s\n",  error->message);
-            g_error_free (error);
-            error = NULL;
-            break;
-        }
-        sleep(1);
-        cnt++;
-    }
-
-    g_print ("closing stream\n");
-    if (!g_io_stream_close (G_IO_STREAM (connection), NULL, &error)) {
-            g_warning ("close error: %s\n",  error->message);
-            g_error_free (error);
-            error = NULL;
-            return 1;
-    }
-    
+	g_thread_new("client_thread",__test_client_thread_routine,&__testClientInfo);
+	
+	main_loop_start();
+	g_assert_not_reached ();
 	return 0;
 }
 

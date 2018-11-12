@@ -71,7 +71,7 @@ LD_SLIBS += -lmodule_json
 LD_SLIBS += -lmodule_xml
 LD_SLIBS += -lmodule_media
 LD_SLIBS += -lmodule_net
-LD_SLIBS += -lmodule_dummy
+#LD_SLIBS += -lmodule_dummy
 
 LD_SLIBS += -lgio-2.0
 LD_SLIBS += -lgmodule-2.0
