@@ -48,8 +48,9 @@ struct _client_s{
  * Return : as below
  * Modify : none
  **************************************************/
-client_t *client_create(char *addr,int port,U32 timeout)
+client_t *client_create(client_connect_addr_type_e addrType,char *addr,int port,U32 timeout)
 {
+	RETURN_VAL_IF_FAIL_ARGS(addrType < CLIENT_CONNECT_ADDR_TYPE_BUTT && addr, NULL,DIAGNO_STR_EINVAL);
 	GSocketClient *client = NULL;
 	GError *error = NULL;
 	GSocketConnection *connection = NULL;
@@ -57,14 +58,23 @@ client_t *client_create(char *addr,int port,U32 timeout)
 	char addrBuf[1024] = {0};
 	GInputStream *in = NULL;
 	GOutputStream *out = NULL;
-	RETURN_VAL_IF_FAIL_ARGS(addr, NULL,DIAGNO_STR_EINVAL);
 	client = g_socket_client_new ();
 	RETURN_VAL_IF_FAIL(client, NULL);
 	g_socket_client_set_timeout (client,timeout);
-	connection = g_socket_client_connect_to_host (client,
-                     addr,
-                     port,
-                     NULL,&error);
+	switch(addrType)
+	{
+		case CLIENT_CONNECT_ADDR_TYPE_IP:
+		{
+			connection = g_socket_client_connect_to_host(client,addr,port,NULL,&error);
+		}break;
+		case CLIENT_CONNECT_ADDR_TYPE_URL:
+		{
+			connection = g_socket_client_connect_to_uri(client,addr,port,NULL,&error);
+		}break;
+		default:
+			ASSERT(0);
+			break;
+	}
 	GOTO_LABEL_IF_FAIL_ARGS(connection, fail,"g_socket_client_connect_to_host fail");
 	g_object_unref (client);
 	address = g_socket_connection_get_remote_address (connection, &error);
@@ -141,6 +151,45 @@ int client_write(client_t *client,void *data,U32 size)
     }
     return ret;
 }
+
+/***************************************************
+ * Function : client_write_string
+ * Author : leon.xie
+ * Creat Date : 2018/11/12  22:31:6
+ * Description : 向服务端写入格式化字符串
+ * In-Parameter : as below
+ * Return : as below
+ * Modify : none
+ **************************************************/
+int client_write_string(client_t *client,const char *format,...)
+{
+	RETURN_VAL_IF_FAIL_ARGS(client ,-1,DIAGNO_STR_EINVAL);
+	GError *error = NULL;
+	int ret = -1;
+	gsize bytes_written = 0;
+    gboolean success;
+    va_list  args;
+    va_start (args, format);
+    success = g_output_stream_vprintf(client->out,&bytes_written, NULL, &error,format,args);
+    va_end (args);
+	if (FALSE == success) 
+	{
+		if(error)
+		{
+			WARN ("send error: %s",  error->message);
+			g_error_free (error);
+			error = NULL;
+		}
+	}
+	else
+	{
+		ret = (int)bytes_written;
+	}
+	
+	return ret;
+}
+
+
 
 /***************************************************
  * Function : client_read

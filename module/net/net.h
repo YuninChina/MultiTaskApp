@@ -40,6 +40,11 @@ typedef gboolean (*server_hander_t)(GThreadedSocketService *,GSocketConnection *
 
 typedef struct _client_s client_t;
 
+typedef enum {
+	CLIENT_CONNECT_ADDR_TYPE_IP,
+	CLIENT_CONNECT_ADDR_TYPE_URL,
+	CLIENT_CONNECT_ADDR_TYPE_BUTT
+}client_connect_addr_type_e;
 /* Exported variables --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 //默认服务器端口号
@@ -88,7 +93,7 @@ int socket_address2string(GSocketAddress *address,char *strOutput,U32 strLen);
  * Return : as below
  * Modify : none
  **************************************************/
-client_t *client_create(char *addr,int port,U32 timeout);
+client_t *client_create(client_connect_addr_type_e addrType,char *addr,int port,U32 timeout);
 
 /***************************************************
  * Function : client_destroy

@@ -60,7 +60,7 @@ static gpointer __test_client_thread_routine(gpointer data)
     char recv_buffer[1024] = {0};
     int cnt = 0;
     
-	client = client_create(testClient->ip,testClient->port,2);
+	client = client_create(CLIENT_CONNECT_ADDR_TYPE_IP,testClient->ip,testClient->port,2);
 	RETURN_VAL_IF_FAIL_ARGS(client, NULL,"client_create fail...");
 	while(1)
 	{
