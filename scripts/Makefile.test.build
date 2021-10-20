@@ -1,0 +1,49 @@
+# ==========================================================================
+# Makefile build
+# ==========================================================================
+
+src := $(obj)
+
+PHONY := __build
+
+obj-y :=
+
+
+include ./${src}/Makefile
+
+
+__subdir-y	:= $(patsubst %/,%,$(filter %/, $(obj-y)))
+subdir-y := $(addprefix $(obj)/,$(__subdir-y))
+
+obj-y := $(filter %.o, $(obj-y))
+ifneq ($(strip $(obj-y)),)
+builtin-target := ${obj-y:.o=}
+builtin-target := $(addprefix $(obj)/,$(builtin-target))
+endif
+
+
+__build: ${builtin-target} $(subdir-y) FORCE
+
+ifdef builtin-target
+$(builtin-target): FORCE
+	$(if ${obj-y},mkdir -p ./bin)
+	$(if ${obj-y},$(CC) ${TEST_CFLAGS} ${LINK_PATH} -o $@ $@.c ${LD_LIBS})
+	$(if ${obj-y},install -p -m 0555 $@ ./bin)
+endif # builtin-target
+
+PHONY += $(subdir-y)
+$(subdir-y): FORCE
+	@make -f ${MAKEFILE_TEST_BUILD}  obj=$@
+	
+#################### rule ####################
+$(obj)/%.o: $(src)/%.c 
+	$(CC) ${CFLAGS} -MMD -MP -MF"$(@:%.o=%.dep)" -o $@ -c $<
+
+$(obj)/%.o: $(src)/%.cpp 
+	$(CC) ${CFLAGS} -MMD -MP -MF"$(@:%.o=%.dep)" -o $@ -c $<
+
+-include $(obj)/*.dep
+
+
+PHONY += FORCE
+FORCE: 
