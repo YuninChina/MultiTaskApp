@@ -53,7 +53,7 @@ static void task_exit(task_t *task)
 	if(task)
 	{
 		MLOGW("task_exit: %s(%lu : %lu)\n",task->info.name,task->info.pid,task->info.tid);
-		mt_async_queue_free(task->q);
+		if(task->q) mt_async_queue_free(task->q);
 		task->q = NULL;
 		pthread_mutex_lock(&task_mutex);
 		list_for_each_entry_safe(node, tmp,&task_list, list) {
@@ -82,7 +82,7 @@ static void *__task_routine(void *arg)
 {
 	pthread_detach(pthread_self());
 	task_t *task = (task_t *)arg;
-	assert(task);
+	RETURN_VAL_IF_FAIL(task,NULL);
 	task->info.tid = (unsigned long)pthread_self();
 	task->info.pid = (unsigned long)gettid();
 	prctl(PR_SET_NAME,task->info.name);
@@ -97,7 +97,7 @@ task_t *task_create(const char *name,unsigned long stack_size,int priority,task_
 	task_t *task = NULL;
 	pthread_t thread_id;
 	task = malloc(sizeof(*task));
-	assert(task);
+	RETURN_VAL_IF_FAIL(task,NULL);
 	memset(task,0,sizeof(*task));
 	task->info.name = name;
 	task->info.stack_size = stack_size;
@@ -114,8 +114,46 @@ task_t *task_create(const char *name,unsigned long stack_size,int priority,task_
 	
 	if(pthread_create(&thread_id, NULL, __task_routine, (void *)task) != 0)
 	{
-		assert(0);
+		mt_async_queue_free(task->q);
+		task->q = NULL;
+		list_del_init(&task->list);
+		pthread_mutex_destroy(&task->mutex);
 		free(task);
+		task=NULL;
+		return NULL;
+	}
+	return task;
+}
+
+task_t *task_create2(const char *name,unsigned long stack_size,int priority,int async,task_func_t func,void *arg)
+{
+	task_t *task = NULL;
+	pthread_t thread_id;
+	task = malloc(sizeof(*task));
+	assert(task);
+	memset(task,0,sizeof(*task));
+	task->info.name = name;
+	task->info.stack_size = stack_size;
+	task->info.priority = priority;
+	task->info.func = func;
+	task->info.arg = arg;
+	if(async > 0) task->q = mt_async_queue_new();
+	
+	INIT_LIST_HEAD(&task->head);
+	pthread_mutex_init(&task->mutex, NULL);
+	pthread_mutex_lock(&task_mutex);
+	list_add_tail(&task->list, &task_list);
+	pthread_mutex_unlock(&task_mutex);
+	
+	if(pthread_create(&thread_id, NULL, __task_routine, (void *)task) != 0)
+	{
+		mt_async_queue_free(task->q);
+		task->q = NULL;
+		list_del_init(&task->list);
+		pthread_mutex_destroy(&task->mutex);
+		free(task);
+		task=NULL;
+		return NULL;
 		return NULL;
 	}
 	return task;
