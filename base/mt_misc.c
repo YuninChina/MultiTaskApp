@@ -8,7 +8,7 @@
 #include <string.h>
 
 #include "mt_log.h"
-#include "mm.h"
+#include "mt_mm.h"
 
 void time2str(char *buf,int size)
 {

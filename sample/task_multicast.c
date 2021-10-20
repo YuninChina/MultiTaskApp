@@ -6,12 +6,12 @@
 #include <string.h>
 #include <assert.h>
 
-#include "task.h"
+#include "mt_task.h"
 #include "multicast.h"
 #include "parson.h"
 
 
-#include "mm.h"
+#include "mt_mm.h"
 #include "mt_msg.h"
 #include "mt_log.h"
 

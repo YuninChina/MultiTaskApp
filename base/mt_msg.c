@@ -9,8 +9,8 @@
 #include "mt_msg.h"
 #include "mt_log.h"
 #include "mt_async_queue.h"
-#include "mm.h"
-#include "task.h"
+#include "mt_mm.h"
+#include "mt_task.h"
 
 
 int mt_msg_send(mt_msg_t *msg)

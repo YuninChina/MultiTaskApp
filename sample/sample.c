@@ -7,8 +7,8 @@
 #include <assert.h>
 #include <sys/prctl.h>
 
-#include "mm.h"
-#include "task.h"
+#include "mt_mm.h"
+#include "mt_task.h"
 
 
 static void *task_routine_no1(void *arg)

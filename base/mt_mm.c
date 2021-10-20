@@ -9,8 +9,8 @@
 #include <assert.h>
 #include <sys/types.h>
 
-#include "mm.h"
-#include "task.h"
+#include "mt_mm.h"
+#include "mt_task.h"
 
 #if defined(CONFIG_MM_TRACE)	
 pthread_mutex_t mm_mutex = PTHREAD_MUTEX_INITIALIZER;

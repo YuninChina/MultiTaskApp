@@ -13,7 +13,7 @@
 #include <unistd.h>
 #include "parson.h"
 
-#include "task.h"
+#include "mt_task.h"
 #include "klist.h"
 #include "inits.h"
 #include "mt_log.h"
