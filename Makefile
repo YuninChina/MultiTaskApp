@@ -100,7 +100,9 @@ RANLIB	= $(CROSS_COMPILE)RANLIB
 
 CFLAGS =
 CFLAGS += -fPIC -rdynamic -pipe -O2 -Wall
-CFLAGS += -I include
+CFLAGS += -I include 
+CFLAGS += -I include/base 
+CFLAGS += -I include/util
 
 ifeq ($(CONFIG_SOC),T31)
 	CFLAGS += -muclibc
