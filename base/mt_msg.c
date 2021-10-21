@@ -10,7 +10,7 @@
 #include "mt_log.h"
 #include "mt_async_queue.h"
 #include "multitask.h"
-#include "mt_task.h"
+#include "multitask.h"
 
 
 int mt_msg_send(mt_msg_t *msg)

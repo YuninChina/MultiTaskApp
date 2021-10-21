@@ -8,7 +8,7 @@
 #include <sys/prctl.h>
 
 #include "multitask.h"
-#include "mt_task.h"
+#include "multitask.h"
 
 
 static void *task_routine_no1(void *arg)

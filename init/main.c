@@ -7,7 +7,7 @@
 #include <assert.h>
 
 #include "multitask.h"
-#include "mt_task.h"
+#include "multitask.h"
 
 int main(void)
 {

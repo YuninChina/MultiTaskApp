@@ -10,7 +10,6 @@
 #include <sys/types.h>
 
 #include "multitask.h"
-#include "multitask.h"
 
 #if defined(CONFIG_MM_TRACE)	
 pthread_mutex_t mm_mutex = PTHREAD_MUTEX_INITIALIZER;

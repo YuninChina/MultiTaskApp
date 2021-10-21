@@ -14,10 +14,6 @@
 #include "parson.h"
 
 #include "multitask.h"
-#include "klist.h"
-#include "inits.h"
-#include "mt_log.h"
-#include "mt_misc.h"
 
 
 typedef struct task_info_s {
