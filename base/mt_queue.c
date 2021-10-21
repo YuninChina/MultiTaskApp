@@ -6,7 +6,7 @@
 
 #include "mt_queue.h"
 #include "mt_log.h"
-#include "mt_mm.h"
+#include "multitask.h"
 
 struct mt_queue_s {
 	struct list_head list;

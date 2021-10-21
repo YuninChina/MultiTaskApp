@@ -6,7 +6,7 @@
 #include <pthread.h>
 #include <assert.h>
 
-#include "mt_mm.h"
+#include "multitask.h"
 #include "mt_task.h"
 
 int main(void)

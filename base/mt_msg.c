@@ -9,7 +9,7 @@
 #include "mt_msg.h"
 #include "mt_log.h"
 #include "mt_async_queue.h"
-#include "mt_mm.h"
+#include "multitask.h"
 #include "mt_task.h"
 
 

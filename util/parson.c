@@ -66,7 +66,7 @@
 static JSON_Malloc_Function parson_malloc = malloc;
 static JSON_Free_Function parson_free = free;
 #else
-#include "mt_mm.h"
+#include "multitask.h"
 
 #define parson_malloc MALLOC
 #define parson_free FREE

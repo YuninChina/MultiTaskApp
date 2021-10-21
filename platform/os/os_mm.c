@@ -9,7 +9,7 @@
 #include <assert.h>
 #include <sys/types.h>
 
-#include "mt_mm.h"
+#include "multitask.h"
 #include "mt_task.h"
 
 #if defined(CONFIG_MM_TRACE)	

@@ -103,6 +103,9 @@ CFLAGS += -fPIC -rdynamic -pipe -O2 -Wall
 CFLAGS += -I include 
 CFLAGS += -I include/base 
 CFLAGS += -I include/util
+CFLAGS += -I include/platform/hal
+CFLAGS += -I include/platform/os
+
 
 ifeq ($(CONFIG_SOC),T31)
 	CFLAGS += -muclibc
@@ -142,7 +145,7 @@ MAKEFILE_BUILD := scripts/Makefile.build
 MAKEFILE_TEST_BUILD := scripts/Makefile.test.build
 export MAKEFILE_BUILD MAKEFILE_TEST_BUILD
 
-dirs := base/ util/
+dirs := base/ util/ platform/ module/
 dirs := ${patsubst %/,%,$(filter %/, $(dirs))}
 PHONY += $(dirs)
 $(dirs): FORCE
