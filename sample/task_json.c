@@ -8,7 +8,6 @@
 #include <sys/prctl.h>
 
 #include "multitask.h"
-#include "multitask.h"
 #include "mt_msg.h"
 #include "mt_log.h"
 
@@ -79,14 +78,14 @@ int main(void)
 	p3 = MALLOC(30);
 	assert(p1);
 	
-	task_create("no1",0,0, task_routine_no1, (void *)NULL);
-	task_create("no2",0,0, task_routine_no2, (void *)NULL);
-	task_create("normal",0,0, task_routine_normal, (void *)NULL);
+	os_task_create("no1",0,0, task_routine_no1, (void *)NULL);
+	os_task_create("no2",0,0, task_routine_no2, (void *)NULL);
+	os_task_create("normal",0,0, task_routine_normal, (void *)NULL);
 	
 	while(1)
 	{
 		//system("clear");
-		if(0 == task_mm_json_get(&pjson))
+		if(0 == os_task_mm_json_get(&pjson))
 		{
 			printf("JSON:\n%s\n",pjson);
 			FREE(pjson);
@@ -111,7 +110,7 @@ int main(void)
 			break;
 	}
 
-	mm_show();
+	os_mm_show();
 	return 0;
 }
 

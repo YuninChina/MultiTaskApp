@@ -10,8 +10,6 @@
 #include "multicast.h"
 #include "parson.h"
 
-
-#include "multitask.h"
 #include "mt_msg.h"
 #include "mt_log.h"
 
@@ -116,9 +114,9 @@ int main(int argc ,char *argv[])
 	
 	assert(1 == sscanf(argv[1],"%hu",&port));
 
-	task_create(TASK_PRODUCER,0,0, task_routine_producer, (void *)NULL);
-	task_create(TASK_CONSUMER1,0,0, task_routine_consumer1, (void *)NULL);
-	task_create(TASK_CONSUMER2,0,0, task_routine_consumer2, (void *)NULL);
+	os_task_create(TASK_PRODUCER,0,0, task_routine_producer, (void *)NULL);
+	os_task_create(TASK_CONSUMER1,0,0, task_routine_consumer1, (void *)NULL);
+	os_task_create(TASK_CONSUMER2,0,0, task_routine_consumer2, (void *)NULL);
 
 	
 	m = multicast_create(MULTICAST_TYPE_SERVER,MUTICAST_ADDR,port);
@@ -126,7 +124,7 @@ int main(int argc ,char *argv[])
 
 	while(1)
 	{
-		if(0 == task_mm_json_get(&pjson))
+		if(0 == os_task_mm_json_get(&pjson))
 		{
 			printf("\n%s\n",pjson);
 			multicast_send(m, (unsigned char *)pjson, strlen(pjson));
