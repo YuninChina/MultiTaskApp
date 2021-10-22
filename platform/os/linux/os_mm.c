@@ -11,13 +11,13 @@
 
 #include "multitask.h"
 
-#if defined(CONFIG_MM_TRACE)	
-pthread_mutex_t mm_mutex = PTHREAD_MUTEX_INITIALIZER;
-static LIST_HEAD(mm_list);
+#if defined(CONFIG_OS_MM_TRACE)	
+pthread_mutex_t os_mm_mutex = PTHREAD_MUTEX_INITIALIZER;
+static LIST_HEAD(os_mm_list);
 #endif
 
 
-void *mm_malloc(const char *func,unsigned long line,unsigned long size)
+void *os_mm_malloc(const char *func,unsigned long line,unsigned long size)
 {
 	void *addr = NULL;
 	addr = malloc(size);
@@ -50,16 +50,16 @@ void *mm_malloc(const char *func,unsigned long line,unsigned long size)
 	mm_node->size = size;
 	mm_node->addr = addr;
 	pthread_getname_np(tid,mm_node->os_task_name,sizeof(mm_node->os_task_name));
-	pthread_mutex_lock(&mm_mutex);
-	list_add_tail(&mm_node->list, &mm_list);
-	pthread_mutex_unlock(&mm_mutex);
+	pthread_mutex_lock(&os_mm_mutex);
+	list_add_tail(&mm_node->list, &os_mm_list);
+	pthread_mutex_unlock(&os_mm_mutex);
 #endif
 
 	return addr;
 }
 
 
-void mm_free(void *addr)
+void os_mm_free(void *addr)
 {
 	if(addr)
 	{
@@ -71,8 +71,8 @@ void mm_free(void *addr)
 
 #if defined(CONFIG_MM_TRACE)
 		os_task_mm_node_t *mm_node = NULL,*mm_tmp = NULL;
-		pthread_mutex_lock(&mm_mutex);
-		list_for_each_entry_safe(mm_node, mm_tmp,&mm_list, list) {
+		pthread_mutex_lock(&os_mm_mutex);
+		list_for_each_entry_safe(mm_node, mm_tmp,&os_mm_list, list) {
 			if(mm_node->addr == addr)
 			{
 				list_del(&mm_node->list);
@@ -81,7 +81,7 @@ void mm_free(void *addr)
 				break;
 			}
 		}
-		pthread_mutex_unlock(&mm_mutex);
+		pthread_mutex_unlock(&os_mm_mutex);
 #endif
 
 		free(addr);
@@ -90,27 +90,27 @@ void mm_free(void *addr)
 }
 
 
-void mm_show(void)
+void os_mm_show(void)
 {
 	os_task_mm_node_t *node = NULL,*tmp = NULL;
 	printf("\n\n=========================================== mm_show ===========================================\n");
 	printf("%-15s %-15s %-15s %-32s %-15s %-15s %-15s\n",
 	"[task]","[tid]","[pid]","[function]","[line]","[addr]","[size]");
-	list_for_each_entry_safe(node, tmp,&mm_list, list) {
+	list_for_each_entry_safe(node, tmp,&os_mm_list, list) {
 		printf("%-15s %-15lu %-15lu %-32s %-15lu %-15p %-15lu\n",
 		node->os_task_name,node->tid,node->pid,node->func,node->line,node->addr,node->size);
 	}
 }
 
 
-void mm_show2(void (*show)(const char *))
+void os_mm_show2(void (*show)(const char *))
 {
 	os_task_mm_node_t *node = NULL,*tmp = NULL;
 	char buf[1024] = {0,};
 	printf("\n\n=========================================== mm_show ===========================================\n");
 	printf("%-15s %-15s %-15s %-32s %-15s %-15s %-15s\n",
 	"[task]","[tid]","[pid]","[function]","[line]","[addr]","[size]");
-	list_for_each_entry_safe(node, tmp,&mm_list, list) {
+	list_for_each_entry_safe(node, tmp,&os_mm_list, list) {
 		memset(buf,0,sizeof(buf));
 		snprintf(buf,sizeof(buf),"%-15s %-15lu %-15lu %-32s %-15lu %-15p %-15lu\n",
 		node->os_task_name,node->tid,node->pid,node->func,node->line,node->addr,node->size);	
