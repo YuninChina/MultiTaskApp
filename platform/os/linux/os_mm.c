@@ -25,7 +25,7 @@ void *os_mm_malloc(const char *func,unsigned long line,unsigned long size)
 	unsigned long pid = (unsigned long)gettid();  //process ID
 	unsigned long tid = (unsigned long)pthread_self();  //thread ID
 
-#if defined(CONFIG_TASK_MM_TRACE)	
+#if defined(CONFIG_OS_TASK_MM_TRACE)	
 	os_task_mm_node_t *node = NULL;
 	node = malloc(sizeof(*node));
 	assert(node);
@@ -39,7 +39,7 @@ void *os_mm_malloc(const char *func,unsigned long line,unsigned long size)
 	os_task_mm_add(node->tid,node);
 #endif
 
-#if defined(CONFIG_MM_TRACE)	
+#if defined(CONFIG_OS_MM_TRACE)	
 	os_task_mm_node_t *mm_node = NULL;
 	mm_node = malloc(sizeof(*mm_node));
 	assert(mm_node);
