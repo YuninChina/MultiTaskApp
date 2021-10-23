@@ -13,16 +13,37 @@ typedef enum {
 	OS_EVDRIVER_BUTT
 }os_evdriver_type_e;
 
+typedef struct os_event_s {
+	os_evdriver_type_e event;
+	union {
+		struct __evdriver_io_s {
+			int fd;
+		}io;
+		
+		struct __evdriver_signal_s {
+			int signo;
+		}signal;
+
+		struct __evdriver_timer_s {
+			unsigned long when;
+			unsigned long interval;
+		}timer;
+	};
+}os_event_t;
+
+
 typedef struct os_evdriver_s os_evdriver_t;
+typedef struct os_evdriver_node_s os_evdriver_node_t;
 
-typedef void (*os_evdriver_callback_t)(os_evdriver_t *handle,int event,void *user_data);
+typedef void (*os_evdriver_callback_t)(os_evdriver_t *handle,os_evdriver_node_t *node,void *user_data);
 
+//////////////////////////////////////////////////////////////////////////////
 os_evdriver_t *os_evdriver_create(void);
 os_evdriver_t *os_evdriver_create2(const char *name);
 void os_evdriver_destroy(os_evdriver_t *evdriver);
 int os_evdriver_run(os_evdriver_t *evdriver);
-int os_evdriver_add(os_evdriver_t *evdriver,int event,int fd,os_evdriver_callback_t cb,void *user_data);
-void os_evdriver_del(os_evdriver_t *evdriver,int fd);
+os_evdriver_node_t *os_evdriver_add(os_evdriver_t *evdriver,os_event_t *ev,os_evdriver_callback_t cb,void *user_data);
+void os_evdriver_del(os_evdriver_t *evdriver,os_evdriver_node_t *evnode);
 
 #ifdef  __cplusplus
 }
