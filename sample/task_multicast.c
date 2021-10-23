@@ -6,12 +6,9 @@
 #include <string.h>
 #include <assert.h>
 
-#include "multitask.h"
-#include "multicast.h"
 #include "parson.h"
 
-#include "mt_msg.h"
-#include "mt_log.h"
+#include "multitask.h"
 
 #define TASK_PRODUCER	"producer"
 #define TASK_CONSUMER1	"consumer1"
@@ -104,7 +101,7 @@ static void *task_routine_consumer2(void *arg)
 
 int main(int argc ,char *argv[])  
 {
-	multicast_t *m = NULL;
+	os_multicast_t *m = NULL;
 	unsigned short port = 6666;
 	char *pjson = NULL;
 	if (argc != 2) {
@@ -119,7 +116,7 @@ int main(int argc ,char *argv[])
 	os_task_create(TASK_CONSUMER2,0,0, task_routine_consumer2, (void *)NULL);
 
 	
-	m = multicast_create(MULTICAST_TYPE_SERVER,MUTICAST_ADDR,port);
+	m = os_multicast_create(MULTICAST_TYPE_SERVER,MUTICAST_ADDR,port);
 	assert(m);
 
 	while(1)
@@ -127,7 +124,7 @@ int main(int argc ,char *argv[])
 		if(0 == os_task_mm_json_get(&pjson))
 		{
 			printf("\n%s\n",pjson);
-			multicast_send(m, (unsigned char *)pjson, strlen(pjson));
+			os_multicast_send(m, (unsigned char *)pjson, strlen(pjson));
 			/////////////////////////////
 			FREE(pjson);
 		}
@@ -135,7 +132,7 @@ int main(int argc ,char *argv[])
 		sleep(1);
 	}
 	
-	multicast_destroy(m);
+	os_multicast_destroy(m);
 	
 	return 0;
 }

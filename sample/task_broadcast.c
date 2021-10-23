@@ -7,7 +7,6 @@
 #include <assert.h>
 
 #include "multitask.h"
-#include "broadcast.h"
 #include "parson.h"
 
 #include "mt_msg.h"
@@ -104,7 +103,7 @@ int main(int argc ,char *argv[])
 	const char *process_name = NULL;
 	int ret = -1;
 	int i;
-	broadcast_t *b = NULL;
+	os_broadcast_t *b = NULL;
 	unsigned short port = 6666;
 	char *pjson = NULL;
 	if (argc != 2) {
@@ -117,7 +116,7 @@ int main(int argc ,char *argv[])
 	os_task_create(TASK_CONSUMER1,0,0, task_routine_consumer1, (void *)NULL);
 	os_task_create(TASK_CONSUMER2,0,0, task_routine_consumer2, (void *)NULL);
 	
-	b = broadcast_create(BROADCAST_TYPE_SERVER,port);
+	b = os_broadcast_create(BROADCAST_TYPE_SERVER,port);
 	assert(b);
 	
 	while(1)
@@ -125,7 +124,7 @@ int main(int argc ,char *argv[])
 		if(0 == os_task_mm_json_get(&pjson))
 		{
 			printf("\n%s\n",pjson);
-			broadcast_send(b, (unsigned char *)pjson, strlen(pjson));
+			os_broadcast_send(b, (unsigned char *)pjson, strlen(pjson));
 			/////////////////////////////
 			FREE(pjson);
 		}
@@ -133,7 +132,7 @@ int main(int argc ,char *argv[])
 		sleep(1);
 	}
 	
-	broadcast_destroy(b);
+	os_broadcast_destroy(b);
 	
 	return 0;
 }

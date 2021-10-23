@@ -7,11 +7,8 @@
 #include <assert.h>
 
 #include "multitask.h"
-#include "broadcast.h"
 #include "parson.h"
 
-#include "mt_msg.h"
-#include "mt_log.h"
 
 #define TASK_PRODUCER	"producer"
 #define TASK_CONSUMER1	"consumer1"
@@ -96,12 +93,12 @@ static void *task_routine_consumer2(void *arg)
 	return NULL;
 }
 
-broadcast_t *g_b = NULL;
+os_broadcast_t *g_b = NULL;
 
 static void __mm_broadcast(const char *s)
 {
 	//printf("%s",s);
-	broadcast_send(g_b, (unsigned char *)s, strlen(s));
+	os_broadcast_send(g_b, (unsigned char *)s, strlen(s));
 }
 
 int main(int argc ,char *argv[])  
@@ -109,7 +106,7 @@ int main(int argc ,char *argv[])
 	const char *process_name = NULL;
 	int ret = -1;
 	int i;
-	broadcast_t *b = NULL;
+	os_broadcast_t *b = NULL;
 	unsigned short port = 6666;
 	int cnt = 0;
 	if (argc != 2) {
@@ -122,7 +119,7 @@ int main(int argc ,char *argv[])
 	os_task_create(TASK_CONSUMER1,0,0, task_routine_consumer1, (void *)NULL);
 	os_task_create(TASK_CONSUMER2,0,0, task_routine_consumer2, (void *)NULL);
 	
-	b = broadcast_create(BROADCAST_TYPE_SERVER,port);
+	b = os_broadcast_create(BROADCAST_TYPE_SERVER,port);
 	assert(b);
 	g_b = b;
 	
@@ -133,7 +130,7 @@ int main(int argc ,char *argv[])
 		sleep(5);
 	}
 	
-	broadcast_destroy(b);
+	os_broadcast_destroy(b);
 	
 	return 0;
 }
