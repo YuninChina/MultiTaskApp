@@ -14,11 +14,11 @@
 #include <arpa/inet.h>
 #include <string.h>
 
-#include "multicast.h"
+#include "os_multicast.h"
 
 
 
-struct multicast_s {
+struct os_multicast_s {
 	/*< private >*/
 	int socket_fd;
 	struct sockaddr_in addr;
@@ -33,10 +33,10 @@ struct multicast_s {
 #define ERROR(args...) printf(args)
 #endif
 
-multicast_t *multicast_create(multicast_type_e type,const char *addr,unsigned short port)
+os_multicast_t *os_multicast_create(os_multicast_type_e type,const char *addr,unsigned short port)
 {
-	multicast_t *m = NULL;
-	m = malloc(sizeof(multicast_t));
+	os_multicast_t *m = NULL;
+	m = malloc(sizeof(os_multicast_t));
 	int err;
 	assert(m);
 	m->socket_fd = socket(AF_INET,SOCK_DGRAM,0);
@@ -82,7 +82,7 @@ multicast_t *multicast_create(multicast_type_e type,const char *addr,unsigned sh
 	
 }
 
-void multicast_destroy(multicast_t *m)
+void os_multicast_destroy(os_multicast_t *m)
 {
 	if(m)
 	{
@@ -91,14 +91,14 @@ void multicast_destroy(multicast_t *m)
 	}
 }
 
-int multicast_send(multicast_t *m,unsigned char *data,unsigned int size)
+int os_multicast_send(os_multicast_t *m,unsigned char *data,unsigned int size)
 {
 	assert(m);
 	//向局部多播地址发送多播内容
 	return sendto(m->socket_fd,data,size,0,(struct sockaddr*)&m->addr,sizeof(m->addr));
 }
 
-int multicast_recv(multicast_t *m,unsigned char *data,unsigned int size)
+int os_multicast_recv(os_multicast_t *m,unsigned char *data,unsigned int size)
 {
 	assert(m);
 	socklen_t len = sizeof(m->addr);

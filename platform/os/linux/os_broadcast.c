@@ -14,10 +14,10 @@
 #include <arpa/inet.h>
 #include <string.h>
 
-#include "broadcast.h"
+#include "os_broadcast.h"
 
 
-struct broadcast_s {
+struct os_broadcast_s {
     /*< private >*/
     int socket_fd;
     struct sockaddr_in addr;
@@ -32,12 +32,12 @@ struct broadcast_s {
 #define ERROR(args...) printf(args)
 #endif
 
-broadcast_t *broadcast_create(broadcast_type_e type,unsigned short port)
+os_broadcast_t *os_broadcast_create(os_broadcast_type_e type,unsigned short port)
 {
 	int ret = -1;
 	const int opt=-1;
-	broadcast_t *b = NULL;
-	b = malloc(sizeof(broadcast_t));
+	os_broadcast_t *b = NULL;
+	b = malloc(sizeof(os_broadcast_t));
 	assert(b);
 	b->socket_fd = socket(AF_INET,SOCK_DGRAM,0);
 	if(b->socket_fd < 0)
@@ -74,7 +74,7 @@ fail:
 	return NULL;
 }
 
-void broadcast_destroy(broadcast_t *b)
+void os_broadcast_destroy(os_broadcast_t *b)
 {
 	if(b)
 	{
@@ -83,7 +83,7 @@ void broadcast_destroy(broadcast_t *b)
 	}
 }
 
-int broadcast_send(broadcast_t *b,unsigned char *data,unsigned int size)
+int os_broadcast_send(os_broadcast_t *b,unsigned char *data,unsigned int size)
 {
 	assert(b);
 	socklen_t len = sizeof(b->addr);
@@ -91,7 +91,7 @@ int broadcast_send(broadcast_t *b,unsigned char *data,unsigned int size)
 }
 
 
-int broadcast_recv(broadcast_t *b,unsigned char *data,unsigned int size)
+int os_broadcast_recv(os_broadcast_t *b,unsigned char *data,unsigned int size)
 {
 	assert(b);
 	socklen_t len = sizeof(b->addr);

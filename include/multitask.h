@@ -4,9 +4,8 @@
 #ifdef  __cplusplus
 extern "C" {
 #endif
+#include "inits.h" 
 
-#include "broadcast.h" 
-#include "multicast.h" 
 #include "parson.h" 
 #include "mt_msg.h" 
 #include "mt_async_queue.h" 
@@ -16,9 +15,11 @@ extern "C" {
 #include "klist.h" 
 #include "version.h" 
 
-#include "inits.h" 
+
 #include "os_mm.h" 
 #include "os_task.h" 
+#include "os_broadcast.h" 
+#include "os_multicast.h" 
 
 #endif
 
