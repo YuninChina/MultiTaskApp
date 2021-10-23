@@ -7,14 +7,14 @@
 #include <sys/prctl.h>
 #include <semaphore.h>
 
-#define _GNU_SOURCE
-#include <sys/syscall.h>
 #include <sys/types.h>
 #include <unistd.h>
+
 #include "parson.h"
 
 #include "multitask.h"
 
+extern pid_t gettid(void);
 
 typedef struct os_task_info_s {
 	const char *name;

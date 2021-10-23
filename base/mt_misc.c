@@ -7,8 +7,13 @@
 #include <strings.h>
 #include <string.h>
 
+#include <unistd.h>
+#include <sys/types.h>
+
 #include "mt_log.h"
 #include "multitask.h"
+
+extern pid_t gettid(void);
 
 void time2str(char *buf,int size)
 {
