@@ -1,12 +1,12 @@
 
-#ifndef __OS_THREAD__H
-#define __OS_THREAD__H
+#ifndef __OS_TYPE__H
+#define __OS_TYPE__H
 
 #ifdef  __cplusplus
 extern "C" {
 #endif
 
-
+typedef unsigned long os_size_t;
 
 
 
@@ -15,6 +15,7 @@ extern "C" {
 #endif
 
 #endif 
+
 
 
 
