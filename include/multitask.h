@@ -21,6 +21,13 @@ extern "C" {
 #include "os_broadcast.h" 
 #include "os_multicast.h" 
 
+
+#ifdef  __cplusplus
+}
+#endif
+
+
+
 #endif
 
 

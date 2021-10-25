@@ -1,6 +1,9 @@
 #ifndef __MULTICASR_H
 #define __MULTICASR_H
 
+#ifdef  __cplusplus
+extern "C" {
+#endif
 
 typedef struct os_multicast_s os_multicast_t;
 
@@ -16,6 +19,12 @@ os_multicast_t *os_multicast_create(os_multicast_type_e type,const char *addr,un
 void os_multicast_destroy(os_multicast_t *m);
 int os_multicast_send(os_multicast_t *m,unsigned char *data,unsigned int size);
 int os_multicast_recv(os_multicast_t *m,unsigned char *data,unsigned int size);
+
+
+#ifdef  __cplusplus
+}
+#endif
+
 
 #endif  //__MULTICASR_H
 

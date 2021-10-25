@@ -7,5 +7,12 @@ extern "C" {
 
 #define MULTI_TASK_VERSION "1.1.0"
 
+
+
+#ifdef  __cplusplus
+}
+#endif
+
+
 #endif
 
