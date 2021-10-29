@@ -10,7 +10,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 
-#include "mt_log.h"
+#include "os_log.h"
 #include "multitask.h"
 
 extern pid_t gettid(void);

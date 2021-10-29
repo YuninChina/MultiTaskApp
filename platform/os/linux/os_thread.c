@@ -5,7 +5,7 @@
 #include <pthread.h>
 #include <semaphore.h>
 
-#include "mt_log.h"
+#include "os_log.h"
 
 #include "os_thread.h"
 

@@ -10,7 +10,7 @@
 #include "parson.h"
 
 #include "mt_msg.h"
-#include "mt_log.h"
+#include "os_log.h"
 
 #define TASK_PRODUCER	"producer"
 #define TASK_CONSUMER1	"consumer1"

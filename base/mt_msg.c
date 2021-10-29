@@ -7,7 +7,7 @@
 #include <assert.h>
 
 #include "mt_msg.h"
-#include "mt_log.h"
+#include "os_log.h"
 #include "mt_async_queue.h"
 #include "multitask.h"
 

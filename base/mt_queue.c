@@ -5,7 +5,7 @@
 #include <string.h>
 
 #include "mt_queue.h"
-#include "mt_log.h"
+#include "os_log.h"
 #include "multitask.h"
 
 struct mt_queue_s {

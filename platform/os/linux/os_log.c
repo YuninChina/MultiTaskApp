@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-#include "mt_log.h"
+#include "os_log.h"
 #include "mt_misc.h"
 
 #ifdef  __cplusplus
