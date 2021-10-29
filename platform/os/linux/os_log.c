@@ -3,7 +3,7 @@
 #include <stdarg.h>
 
 #include "os_log.h"
-#include "mt_misc.h"
+#include "os_misc.h"
 
 #ifdef  __cplusplus
 extern "C" {
