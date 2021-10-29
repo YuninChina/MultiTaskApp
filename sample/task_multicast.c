@@ -111,9 +111,9 @@ int main(int argc ,char *argv[])
 	
 	assert(1 == sscanf(argv[1],"%hu",&port));
 
-	os_task_create(TASK_PRODUCER,0,0, task_routine_producer, (void *)NULL);
-	os_task_create(TASK_CONSUMER1,0,0, task_routine_consumer1, (void *)NULL);
-	os_task_create(TASK_CONSUMER2,0,0, task_routine_consumer2, (void *)NULL);
+	mt_task_create(TASK_PRODUCER,0,0, task_routine_producer, (void *)NULL);
+	mt_task_create(TASK_CONSUMER1,0,0, task_routine_consumer1, (void *)NULL);
+	mt_task_create(TASK_CONSUMER2,0,0, task_routine_consumer2, (void *)NULL);
 
 	
 	m = os_multicast_create(MULTICAST_TYPE_SERVER,MUTICAST_ADDR,port);
@@ -121,7 +121,7 @@ int main(int argc ,char *argv[])
 
 	while(1)
 	{
-		if(0 == os_task_mm_json_get(&pjson))
+		if(0 == mt_task_mm_json_get(&pjson))
 		{
 			printf("\n%s\n",pjson);
 			os_multicast_send(m, (unsigned char *)pjson, strlen(pjson));

@@ -88,17 +88,17 @@ int main(void)
 	assert(p1);
 
 	
-	os_task_t *t1 = NULL,*t2 = NULL,*t3 = NULL,*t4 = NULL;
+	mt_task_t *t1 = NULL,*t2 = NULL,*t3 = NULL,*t4 = NULL;
 	
-	t1 = os_task_create("no1",0,0, task_routine_no1, (void *)NULL);
-	t2 = os_task_create("no2",0,0, task_routine_no2, (void *)NULL);
-	t3 = os_task_create("normal",0,0, task_routine_normal, (void *)NULL);
-	t4 = os_task_create("dummy",0,0, task_routine_dummy, (void *)NULL);
+	t1 = mt_task_create("no1",0,0, task_routine_no1, (void *)NULL);
+	t2 = mt_task_create("no2",0,0, task_routine_no2, (void *)NULL);
+	t3 = mt_task_create("normal",0,0, task_routine_normal, (void *)NULL);
+	t4 = mt_task_create("dummy",0,0, task_routine_dummy, (void *)NULL);
 	
 	while(1)
 	{
 		system("clear");
-		os_task_mm_show();
+		mt_task_mm_show();
 		sleep(1);
 
 		if(cnt == 3*1)
@@ -118,7 +118,7 @@ int main(void)
 			break;
 	}
 
-	os_mm_show();
+	mt_mm_show();
 	
 	return 0;
 }

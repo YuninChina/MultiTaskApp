@@ -115,9 +115,9 @@ int main(int argc ,char *argv[])
 	}
 	assert(1 == sscanf(argv[1],"%hu",&port));
 	
-	os_task_create(TASK_PRODUCER,0,0, task_routine_producer, (void *)NULL);
-	os_task_create(TASK_CONSUMER1,0,0, task_routine_consumer1, (void *)NULL);
-	os_task_create(TASK_CONSUMER2,0,0, task_routine_consumer2, (void *)NULL);
+	mt_task_create(TASK_PRODUCER,0,0, task_routine_producer, (void *)NULL);
+	mt_task_create(TASK_CONSUMER1,0,0, task_routine_consumer1, (void *)NULL);
+	mt_task_create(TASK_CONSUMER2,0,0, task_routine_consumer2, (void *)NULL);
 	
 	b = os_broadcast_create(BROADCAST_TYPE_SERVER,port);
 	assert(b);
@@ -125,7 +125,7 @@ int main(int argc ,char *argv[])
 	
 	while(1)
 	{
-		os_mm_show2(__mm_broadcast);
+		mt_mm_show2(__mm_broadcast);
 		/////////////////////////////
 		sleep(5);
 	}
