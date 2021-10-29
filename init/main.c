@@ -7,7 +7,6 @@
 #include <assert.h>
 
 #include "multitask.h"
-#include "multitask.h"
 
 int main(void)
 {
@@ -23,7 +22,7 @@ int main(void)
 	while(1)
 	{
 		if(system("clear"));
-		os_task_mm_show();
+		mt_task_mm_show();
 		sleep(1);
 		if(cnt == 3*1)
 		{
