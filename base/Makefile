@@ -3,7 +3,6 @@ obj-y :=
 obj-y += mt_async_queue.o
 obj-y += mt_msg.o
 obj-y += mt_queue.o
-obj-y += mt_misc.o
 
 obj-y += mt_broadcast.o
 obj-y += mt_evdriver.o
