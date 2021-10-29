@@ -22,7 +22,7 @@
 #define MAX_EVENTS  10 
 
 
-struct os_evdriver_s {
+struct mt_evdriver_s {
 	struct list_head list;
 	pthread_mutex_t mutex;
 	/* INFO */
@@ -31,12 +31,12 @@ struct os_evdriver_s {
 	int running;
 };
 
-struct os_evdriver_node_s {
+struct mt_evdriver_node_s {
 	struct list_head list;
-	os_evdriver_t *evdriver;
+	mt_evdriver_t *evdriver;
 	int event_fd;
-	os_evdriver_type_e event_type;
-	os_evdriver_callback_t cb;
+	mt_evdriver_type_e event_type;
+	mt_evdriver_callback_t cb;
 	void *user_data;
 };
 
@@ -51,7 +51,7 @@ static void msec2tspec(int msec, struct timespec *ts)
 	}
 }
 
-static int __evdriver_epoll_add(os_evdriver_node_t *node,unsigned int events)
+static int __evdriver_epoll_add(mt_evdriver_node_t *node,unsigned int events)
 {
 	struct epoll_event ev;
 	RETURN_VAL_IF_FAIL(node, -1);
@@ -65,13 +65,13 @@ static int __evdriver_epoll_add(os_evdriver_node_t *node,unsigned int events)
 }
 
 
-static int __evdriver_io_add(os_evdriver_node_t *node, int fd)
+static int __evdriver_io_add(mt_evdriver_node_t *node, int fd)
 {
 	node->event_fd = fd;
 	return __evdriver_epoll_add(node,EPOLLIN);
 }
 
-static int __evdriver_signal_add(os_evdriver_node_t *node, int signo)
+static int __evdriver_signal_add(mt_evdriver_node_t *node, int signo)
 {
 	int fd = -1;
 	sigset_t mask;
@@ -89,7 +89,7 @@ static int __evdriver_signal_add(os_evdriver_node_t *node, int signo)
 	return 0;
 }
 
-static int __evdriver_timer_add(os_evdriver_node_t *node, unsigned long when,unsigned long interval)
+static int __evdriver_timer_add(mt_evdriver_node_t *node, unsigned long when,unsigned long interval)
 {
 	int fd = -1;
 	struct itimerspec time;
@@ -105,9 +105,9 @@ static int __evdriver_timer_add(os_evdriver_node_t *node, unsigned long when,uns
 
 
 
-os_evdriver_t *os_evdriver_create2(const char *name)
+mt_evdriver_t *mt_evdriver_create2(const char *name)
 {
-	os_evdriver_t *evdriver = NULL;
+	mt_evdriver_t *evdriver = NULL;
 	evdriver = MALLOC(sizeof(*evdriver));
 	RETURN_VAL_IF_FAIL(evdriver, NULL);
 	memset(evdriver,0,sizeof(*evdriver));
@@ -119,15 +119,15 @@ os_evdriver_t *os_evdriver_create2(const char *name)
 	return evdriver;
 }
 
-os_evdriver_t *os_evdriver_create(void)
+mt_evdriver_t *mt_evdriver_create(void)
 {
-	return os_evdriver_create2("evdriver");
+	return mt_evdriver_create2("evdriver");
 }
 
 
-void os_evdriver_destroy(os_evdriver_t *evdriver)
+void mt_evdriver_destroy(mt_evdriver_t *evdriver)
 {
-	os_evdriver_node_t *node = NULL,*tmp = NULL;
+	mt_evdriver_node_t *node = NULL,*tmp = NULL;
 	if(evdriver)
 	{
 		evdriver->running = 0;
@@ -149,11 +149,11 @@ void os_evdriver_destroy(os_evdriver_t *evdriver)
 	}
 }
 
-int os_evdriver_run2(os_evdriver_t *evdriver,int flags)
+int mt_evdriver_run2(mt_evdriver_t *evdriver,int flags)
 {
 	struct epoll_event ee[MAX_EVENTS];
 	int i, nfds;
-	os_evdriver_node_t *ev_node = NULL;
+	mt_evdriver_node_t *ev_node = NULL;
 	int timeout = -1;
 	
 	if (flags & EVDIRVER_NONBLOCK)
@@ -172,7 +172,7 @@ int os_evdriver_run2(os_evdriver_t *evdriver,int flags)
 			struct signalfd_siginfo fdsi;
 			uint64_t exp;
 			
-			ev_node = (os_evdriver_node_t *)ee[i].data.ptr;
+			ev_node = (mt_evdriver_node_t *)ee[i].data.ptr;
 			CONTINUE_IF_FAIL(ev_node);
 			events = ee[i].events;
 			switch (ev_node->event_type) {
@@ -212,14 +212,14 @@ int os_evdriver_run2(os_evdriver_t *evdriver,int flags)
 	return 0;
 }
 
-int os_evdriver_run(os_evdriver_t *evdriver)
+int mt_evdriver_run(mt_evdriver_t *evdriver)
 {
-	return os_evdriver_run2(evdriver,0);
+	return mt_evdriver_run2(evdriver,0);
 }
 
-os_evdriver_node_t *os_evdriver_add(os_evdriver_t *evdriver,os_event_t *ev,os_evdriver_callback_t cb,void *user_data)
+mt_evdriver_node_t *mt_evdriver_add(mt_evdriver_t *evdriver,mt_event_t *ev,mt_evdriver_callback_t cb,void *user_data)
 {
-	os_evdriver_node_t *node = NULL;
+	mt_evdriver_node_t *node = NULL;
 	int ret = -1;
 	RETURN_VAL_IF_FAIL(evdriver && ev && cb, NULL);
 	RETURN_VAL_IF_FAIL(ev->event < OS_EVDRIVER_BUTT, NULL);
@@ -261,11 +261,11 @@ fail:
 	return NULL;
 }
 
-void os_evdriver_del(os_evdriver_node_t *evnode)
+void mt_evdriver_del(mt_evdriver_node_t *evnode)
 {
-	os_evdriver_node_t *node = NULL,*tmp = NULL;
+	mt_evdriver_node_t *node = NULL,*tmp = NULL;
 	RETURN_IF_FAIL(evnode);
-	os_evdriver_t *evdriver = evnode->evdriver;
+	mt_evdriver_t *evdriver = evnode->evdriver;
 	if(evdriver)
 	{
 		pthread_mutex_lock(&evdriver->mutex);
