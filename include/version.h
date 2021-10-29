@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-#define MULTI_TASK_VERSION "1.1.0"
+#define MULTI_TASK_VERSION "1.2.0"
 
 
 
