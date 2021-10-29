@@ -9,32 +9,32 @@ extern "C" {
 
 #define CONFIG_OS_TASK_MM_TRACE 1
 
-typedef struct os_task_mm_node_s{
+typedef struct mt_task_mm_node_s{
 	struct list_head list;
 	/////////////////////
-	char os_task_name[32];
+	char mt_task_name[32];
 	unsigned long pid;  //process ID
 	unsigned long tid;  //thread ID
 	const char *func;
 	unsigned long line;
 	unsigned long size;
 	void *addr;
-}os_task_mm_node_t;
+}mt_task_mm_node_t;
 
-typedef void *(*os_task_func_t)(void *user_data);
-typedef struct os_task_s os_task_t;
+typedef void *(*mt_task_func_t)(void *user_data);
+typedef struct mt_task_s mt_task_t;
 
 
-os_task_t *os_task_create(const char *name,unsigned long stack_size,int priority,os_task_func_t func,void *arg);
-os_task_t *os_task_create2(const char *name,unsigned long stack_size,int priority,int async,os_task_func_t func,void *arg);
+mt_task_t *mt_task_create(const char *name,unsigned long stack_size,int priority,mt_task_func_t func,void *arg);
+mt_task_t *mt_task_create2(const char *name,unsigned long stack_size,int priority,int async,mt_task_func_t func,void *arg);
 
-void os_task_mm_show(void);
-void os_task_mm_add(unsigned long tid,os_task_mm_node_t *mnode);
-void os_task_mm_del(unsigned long tid,void *addr);
-mt_async_queue_t *os_task_aq_get(const char *name);
-mt_async_queue_t *os_task_aq_self(void);
-const char *os_task_name_get_from_pid(unsigned long pid);
-const char *os_task_name_get_from_tid(unsigned long tid);
+void mt_task_mm_show(void);
+void mt_task_mm_add(unsigned long tid,mt_task_mm_node_t *mnode);
+void mt_task_mm_del(unsigned long tid,void *addr);
+mt_async_queue_t *mt_task_aq_get(const char *name);
+mt_async_queue_t *mt_task_aq_self(void);
+const char *mt_task_name_get_from_pid(unsigned long pid);
+const char *mt_task_name_get_from_tid(unsigned long tid);
 
 
 #ifdef  __cplusplus

@@ -11,15 +11,15 @@ typedef enum {
 	OS_EVDRIVER_TIMER,
 	OS_EVDRIVER_SIGNAL,
 	OS_EVDRIVER_BUTT
-}os_evdriver_type_e;
+}mt_evdriver_type_e;
 
 /* Run flags */
 #define EVDIRVER_ONCE        1		/**< run loop once    */
 #define EVDIRVER_NONBLOCK    2		/**< exit if no event */
 
 
-typedef struct os_event_s {
-	os_evdriver_type_e event;
+typedef struct mt_event_s {
+	mt_evdriver_type_e event;
 	union {
 		struct __evdriver_io_s {
 			int fd;
@@ -34,23 +34,23 @@ typedef struct os_event_s {
 			unsigned long interval;
 		}timer;
 	};
-}os_event_t;
+}mt_event_t;
 
 
-typedef struct os_evdriver_s os_evdriver_t;
-typedef struct os_evdriver_node_s os_evdriver_node_t;
+typedef struct mt_evdriver_s mt_evdriver_t;
+typedef struct mt_evdriver_node_s mt_evdriver_node_t;
 
-typedef void (*os_evdriver_callback_t)(os_evdriver_node_t *evnode,void *user_data,int events);
+typedef void (*mt_evdriver_callback_t)(mt_evdriver_node_t *evnode,void *user_data,int events);
 
 //////////////////////////////////////////////////////////////////////////////
-os_evdriver_t *os_evdriver_create(void);
-os_evdriver_t *os_evdriver_create2(const char *name);
-void os_evdriver_destroy(os_evdriver_t *evdriver);
-int os_evdriver_run(os_evdriver_t *evdriver);
-int os_evdriver_run2(os_evdriver_t *evdriver,int flag);
+mt_evdriver_t *mt_evdriver_create(void);
+mt_evdriver_t *mt_evdriver_create2(const char *name);
+void mt_evdriver_destroy(mt_evdriver_t *evdriver);
+int mt_evdriver_run(mt_evdriver_t *evdriver);
+int mt_evdriver_run2(mt_evdriver_t *evdriver,int flag);
 
-os_evdriver_node_t *os_evdriver_add(os_evdriver_t *evdriver,os_event_t *ev,os_evdriver_callback_t cb,void *user_data);
-void os_evdriver_del(os_evdriver_node_t *evnode);
+mt_evdriver_node_t *mt_evdriver_add(mt_evdriver_t *evdriver,mt_event_t *ev,mt_evdriver_callback_t cb,void *user_data);
+void mt_evdriver_del(mt_evdriver_node_t *evnode);
 
 #ifdef  __cplusplus
 }
