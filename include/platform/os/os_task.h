@@ -35,6 +35,7 @@ os_async_queue_t *os_task_aq_get(const char *name);
 os_async_queue_t *os_task_aq_self(void);
 const char *os_task_name_get_from_pid(unsigned long pid);
 const char *os_task_name_get_from_tid(unsigned long tid);
+int os_task_mm_json_get(char **ppjson);
 
 
 #ifdef  __cplusplus

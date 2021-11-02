@@ -15,6 +15,13 @@ void *os_realloc(void *ptr, os_size_t size);
 
 int os_system(const char *command);
 unsigned int os_sleep(unsigned int seconds);
+void *os_memset(void *s, int c, os_size_t n);
+char *os_strcpy(char *dest, const char *src);
+char *os_strncpy(char *dest, const char *src, os_size_t n);
+
+int os_scanf(const char *format, ...);
+int os_sscanf(const char *str, const char *format, ...);
+os_size_t os_strlen(const char *s);
 
 
 #ifdef  __cplusplus

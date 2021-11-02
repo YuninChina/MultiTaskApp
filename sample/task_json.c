@@ -1,16 +1,5 @@
-#include <stdio.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <pthread.h>
-#include <assert.h>
-#include <sys/prctl.h>
 
 #include "multitask.h"
-#include "os_msg.h"
-#include "os_log.h"
-
 
 #define TASK_PRODUCER	"producer"
 #define TASK_CONSUMER1	"consumer1"
@@ -23,7 +12,8 @@ static void *task_routine_no1(void *arg)
 	while (1)
 	{
 		p = MALLOC((cnt+1)*16);
-		sleep(1);
+		ASSERT(p);
+		os_sleep(1);
 		cnt++;
 		if(cnt > 5)
 			break;
@@ -38,7 +28,8 @@ static void *task_routine_no2(void *arg)
 	while (1)
 	{
 		p = MALLOC((cnt+1)*512);
-		sleep(1);
+		ASSERT(p);
+		os_sleep(1);
 		cnt++;
 		if(cnt > 10)
 			break;
@@ -56,7 +47,8 @@ static void *task_routine_normal(void *arg)
 		p = MALLOC((cnt+1)*2048);
 		cnt++;
 		FREE(p);
-		sleep(1);
+		ASSERT(p);
+		os_sleep(1);
 		if(cnt > 15)
 			break;
 		
@@ -72,11 +64,11 @@ int main(void)
 	char *pjson = NULL;
 	MLOGD("Task start ....");
 	p1 = MALLOC(10);
-	assert(p1);
+	ASSERT(p1);
 	p2 = MALLOC(20);
-	assert(p1);
+	ASSERT(p1);
 	p3 = MALLOC(30);
-	assert(p1);
+	ASSERT(p1);
 	
 	os_task_create("no1",0,0, task_routine_no1, (void *)NULL);
 	os_task_create("no2",0,0, task_routine_no2, (void *)NULL);
@@ -87,11 +79,11 @@ int main(void)
 		//system("clear");
 		if(0 == os_task_mm_json_get(&pjson))
 		{
-			printf("JSON:\n%s\n",pjson);
+			MLOGD("JSON:\n%s\n",pjson);
 			FREE(pjson);
 		}
 		
-		sleep(1);
+		os_sleep(1);
 
 		if(cnt == 3*1)
 		{

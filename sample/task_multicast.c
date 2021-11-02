@@ -24,10 +24,10 @@ static void *task_routine_producer(void *arg)
 	while (1)
 	{
 		msg = MALLOC(sizeof(*msg)+32);
-		assert(msg);
+		ASSERT(msg);
 		MLOGM("msg1=%p\n",msg);
-		memset(msg,0,(sizeof(*msg)+32));
-		strcpy(msg->data,"hello");
+		os_memset(msg,0,(sizeof(*msg)+32));
+		os_strcpy((char *)msg->data,"hello");
 		msg->src = TASK_PRODUCER;
 		msg->dst = TASK_CONSUMER1;
 		msg->priority = 0;
@@ -37,13 +37,13 @@ static void *task_routine_producer(void *arg)
 			FREE(msg);
 			msg = NULL;
 		}
-		sleep(1);
+		os_sleep(1);
 		
 		msg = MALLOC(sizeof(*msg)+32);
-		assert(msg);
+		ASSERT(msg);
 		MLOGM("msg2=%p\n",msg);
-		memset(msg,0,(sizeof(*msg)+32));
-		strcpy(msg->data,"world");
+		os_memset(msg,0,(sizeof(*msg)+32));
+		os_strcpy((char *)msg->data,"world");
 		msg->src = TASK_PRODUCER;
 		msg->dst = TASK_CONSUMER2;
 		msg->priority = 0;
@@ -53,7 +53,7 @@ static void *task_routine_producer(void *arg)
 			FREE(msg);
 			msg = NULL;
 		}
-		sleep(1);
+		os_sleep(1);
 		if(cnt++ > 5)
 			break;
 	}
@@ -69,7 +69,7 @@ static void *task_routine_consumer1(void *arg)
 	while (1)
 	{
 		msg = os_msg_recv();
-		str = msg->data;
+		str = (char *)msg->data;
 		MLOGM("[From: %s To: %s]str: %s\n",msg->src,msg->dst,str);
 		FREE(msg);
 		if(cnt++ > 3)
@@ -87,7 +87,7 @@ static void *task_routine_consumer2(void *arg)
 	while (1)
 	{
 		msg = os_msg_recv();
-		str = msg->data;
+		str = (char *)msg->data;
 		MLOGM("[From: %s To: %s]str: %s\n",msg->src,msg->dst,str);
 		FREE(msg);
 		if(cnt++ > 2)
@@ -105,11 +105,11 @@ int main(int argc ,char *argv[])
 	unsigned short port = 6666;
 	char *pjson = NULL;
 	if (argc != 2) {
-		fprintf(stderr, "Usage: %s <port>\n", argv[0]);
-		exit(EXIT_FAILURE);
+		MLOGE("Usage: %s <port>\n", argv[0]);
+		return -1;
 	}
 	
-	assert(1 == sscanf(argv[1],"%hu",&port));
+	ASSERT(1 == sscanf(argv[1],"%hu",&port));
 
 	os_task_create(TASK_PRODUCER,0,0, task_routine_producer, (void *)NULL);
 	os_task_create(TASK_CONSUMER1,0,0, task_routine_consumer1, (void *)NULL);
@@ -117,19 +117,19 @@ int main(int argc ,char *argv[])
 
 	
 	m = os_multicast_create(MULTICAST_TYPE_SERVER,MUTICAST_ADDR,port);
-	assert(m);
+	ASSERT(m);
 
 	while(1)
 	{
 		if(0 == os_task_mm_json_get(&pjson))
 		{
-			printf("\n%s\n",pjson);
+			MLOGD("\n%s\n",pjson);
 			os_multicast_send(m, (unsigned char *)pjson, strlen(pjson));
 			/////////////////////////////
 			FREE(pjson);
 		}
 		/////////////////////////////
-		sleep(1);
+		os_sleep(1);
 	}
 	
 	os_multicast_destroy(m);

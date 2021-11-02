@@ -1,12 +1,3 @@
-#include <stdio.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <pthread.h>
-#include <assert.h>
-#include <sys/prctl.h>
-
 #include "multitask.h"
 
 
@@ -17,7 +8,8 @@ static void *task_routine_no1(void *arg)
 	while (1)
 	{
 		p = MALLOC((cnt+1)*16);
-		sleep(1);
+		ASSERT(p);
+		os_sleep(1);
 		cnt++;
 		if(cnt > 5)
 			break;
@@ -32,7 +24,8 @@ static void *task_routine_no2(void *arg)
 	while (1)
 	{
 		p = MALLOC((cnt+1)*512);
-		sleep(1);
+		ASSERT(p);
+		os_sleep(1);
 		cnt++;
 		if(cnt > 10)
 			break;
@@ -48,9 +41,10 @@ static void *task_routine_normal(void *arg)
 	while (1)
 	{
 		p = MALLOC((cnt+1)*2048);
+		ASSERT(p);
 		cnt++;
 		FREE(p);
-		sleep(1);
+		os_sleep(1);
 		if(cnt > 15)
 			break;
 		
@@ -66,8 +60,9 @@ static void *task_routine_dummy(void *arg)
 	while (1)
 	{
 		p = MALLOC((cnt+1)*64);
+		ASSERT(p);
 		cnt++;
-		sleep(1);
+		os_sleep(1);
 		if(cnt > 20)
 			break;
 	}
@@ -81,25 +76,29 @@ int main(void)
 	void *p1,*p2,*p3;
 	int cnt = 0;
 	p1 = MALLOC(10);
-	assert(p1);
+	ASSERT(p1);
 	p2 = MALLOC(20);
-	assert(p1);
+	ASSERT(p1);
 	p3 = MALLOC(30);
-	assert(p1);
+	ASSERT(p1);
 
 	
 	os_task_t *t1 = NULL,*t2 = NULL,*t3 = NULL,*t4 = NULL;
 	
 	t1 = os_task_create("no1",0,0, task_routine_no1, (void *)NULL);
+	ASSERT(t1);
 	t2 = os_task_create("no2",0,0, task_routine_no2, (void *)NULL);
+	ASSERT(t2);
 	t3 = os_task_create("normal",0,0, task_routine_normal, (void *)NULL);
+	ASSERT(t3);
 	t4 = os_task_create("dummy",0,0, task_routine_dummy, (void *)NULL);
+	ASSERT(t4);
 	
 	while(1)
 	{
-		system("clear");
+		os_system("clear");
 		os_task_mm_show();
-		sleep(1);
+		os_sleep(1);
 
 		if(cnt == 3*1)
 		{

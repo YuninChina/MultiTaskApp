@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
+#include <stdarg.h>
+
 
 #include "os_stdlibc.h"
 
@@ -34,4 +37,47 @@ unsigned int os_sleep(unsigned int seconds)
 {
 	return sleep(seconds);
 }
+
+
+void *os_memset(void *s, int c, os_size_t n)
+{
+	return memset(s, c, (size_t)n);
+}
+
+
+char *os_strcpy(char *dest, const char *src)
+{
+	return strcpy(dest,src);
+}
+
+char *os_strncpy(char *dest, const char *src, os_size_t n)
+{
+	return strncpy(dest,src,n);
+}
+
+int os_scanf(const char *format, ...)
+{
+	int ret = -1;
+	va_list args;
+	va_start(args, format);
+	ret = scanf(format,args);
+	va_end(args);
+	return ret;
+}
+
+int os_sscanf(const char *str, const char *format, ...)
+{
+	int ret = -1;
+	va_list args;
+	va_start(args, format);
+	ret = sscanf(str,format,args);
+	va_end(args);
+	return ret;
+}
+
+os_size_t os_strlen(const char *s)
+{
+	return strlen(s);
+}
+
 
