@@ -9,7 +9,7 @@
 #include "multitask.h"
 #include "parson.h"
 
-#include "mt_msg.h"
+#include "os_msg.h"
 #include "os_log.h"
 
 #define TASK_PRODUCER	"producer"
@@ -19,7 +19,7 @@
 
 static void *task_routine_producer(void *arg)
 {
-	mt_msg_t *msg;
+	os_msg_t *msg;
 	int cnt = 0;
 	while (1)
 	{
@@ -32,7 +32,7 @@ static void *task_routine_producer(void *arg)
 		msg->dst = TASK_CONSUMER1;
 		msg->priority = 0;
 		msg->size = 32;
-		if(mt_msg_send(msg))
+		if(os_msg_send(msg))
 		{
 			FREE(msg);
 			msg = NULL;
@@ -48,7 +48,7 @@ static void *task_routine_producer(void *arg)
 		msg->dst = TASK_CONSUMER2;
 		msg->priority = 0;
 		msg->size = 32;
-		if(mt_msg_send(msg))
+		if(os_msg_send(msg))
 		{
 			FREE(msg);
 			msg = NULL;
@@ -64,11 +64,11 @@ static void *task_routine_producer(void *arg)
 static void *task_routine_consumer1(void *arg)
 {
 	const char *str = NULL;
-	mt_msg_t *msg;
+	os_msg_t *msg;
 	int cnt = 0;
 	while (1)
 	{
-		msg = mt_msg_recv();
+		msg = os_msg_recv();
 		str = msg->data;
 		MLOGM("[From: %s To: %s]str: %s\n",msg->src,msg->dst,str);
 		FREE(msg);
@@ -82,11 +82,11 @@ static void *task_routine_consumer1(void *arg)
 static void *task_routine_consumer2(void *arg)
 {
 	const char *str = NULL;
-	mt_msg_t *msg;
+	os_msg_t *msg;
 	int cnt = 0;
 	while (1)
 	{
-		msg = mt_msg_recv();
+		msg = os_msg_recv();
 		str = msg->data;
 		MLOGM("[From: %s To: %s]str: %s\n",msg->src,msg->dst,str);
 		FREE(msg);
@@ -112,16 +112,16 @@ int main(int argc ,char *argv[])
 	}
 	assert(1 == sscanf(argv[1],"%hu",&port));
 	
-	mt_task_create(TASK_PRODUCER,0,0, task_routine_producer, (void *)NULL);
-	mt_task_create(TASK_CONSUMER1,0,0, task_routine_consumer1, (void *)NULL);
-	mt_task_create(TASK_CONSUMER2,0,0, task_routine_consumer2, (void *)NULL);
+	os_task_create(TASK_PRODUCER,0,0, task_routine_producer, (void *)NULL);
+	os_task_create(TASK_CONSUMER1,0,0, task_routine_consumer1, (void *)NULL);
+	os_task_create(TASK_CONSUMER2,0,0, task_routine_consumer2, (void *)NULL);
 	
 	b = os_broadcast_create(BROADCAST_TYPE_SERVER,port);
 	assert(b);
 	
 	while(1)
 	{
-		if(0 == mt_task_mm_json_get(&pjson))
+		if(0 == os_task_mm_json_get(&pjson))
 		{
 			printf("\n%s\n",pjson);
 			os_broadcast_send(b, (unsigned char *)pjson, strlen(pjson));

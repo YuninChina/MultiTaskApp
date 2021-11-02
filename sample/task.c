@@ -8,7 +8,7 @@
 #include <sys/prctl.h>
 
 #include "multitask.h"
-#include "mt_msg.h"
+#include "os_msg.h"
 #include "os_log.h"
 
 
@@ -67,7 +67,7 @@ static void *task_routine_normal(task_self_t *self,void *arg)
 
 static void *task_routine_producer(task_self_t *self,void *arg)
 {
-	mt_msg_t *msg;
+	os_msg_t *msg;
 	while (1)
 	{
 		msg = MALLOC(sizeof(*msg)+32);
@@ -78,7 +78,7 @@ static void *task_routine_producer(task_self_t *self,void *arg)
 		msg->dst = TASK_CONSUMER1;
 		msg->priority = 0;
 		msg->size = 32;
-		mt_msg_send(msg);
+		os_msg_send(msg);
 		sleep(1);
 		
 		msg = MALLOC(sizeof(*msg)+32);
@@ -89,7 +89,7 @@ static void *task_routine_producer(task_self_t *self,void *arg)
 		msg->dst = TASK_CONSUMER2;
 		msg->priority = 0;
 		msg->size = 32;
-		mt_msg_send(msg);
+		os_msg_send(msg);
 		sleep(2);
 	}
 	
@@ -99,10 +99,10 @@ static void *task_routine_producer(task_self_t *self,void *arg)
 static void *task_routine_consumer1(task_self_t *self,void *arg)
 {
 	const char *str = NULL;
-	mt_msg_t *msg;
+	os_msg_t *msg;
 	while (1)
 	{
-		msg = mt_msg_recv();
+		msg = os_msg_recv();
 		str = msg->data;
 		MLOGM("[From: %s To: %s]str: %s\n",msg->src,msg->dst,str);
 		FREE(msg);
@@ -114,10 +114,10 @@ static void *task_routine_consumer1(task_self_t *self,void *arg)
 static void *task_routine_consumer2(task_self_t *self,void *arg)
 {
 	const char *str = NULL;
-	mt_msg_t *msg;
+	os_msg_t *msg;
 	while (1)
 	{
-		msg = mt_msg_recv();
+		msg = os_msg_recv();
 		str = msg->data;
 		MLOGM("[From: %s To: %s]str: %s\n",msg->src,msg->dst,str);
 		FREE(msg);
@@ -141,18 +141,18 @@ int main(void)
 	p3 = MALLOC(30);
 	assert(p1);
 	
-	mt_task_create("no1",0,0, task_routine_no1, (void *)NULL);
-	mt_task_create("no2",0,0, task_routine_no2, (void *)NULL);
-	mt_task_create("normal",0,0, task_routine_normal, (void *)NULL);
-	mt_task_create(TASK_PRODUCER,0,0, task_routine_producer, (void *)NULL);
-	mt_task_create(TASK_CONSUMER1,0,0, task_routine_consumer1, (void *)NULL);
-	mt_task_create(TASK_CONSUMER2,0,0, task_routine_consumer2, (void *)NULL);
+	os_task_create("no1",0,0, task_routine_no1, (void *)NULL);
+	os_task_create("no2",0,0, task_routine_no2, (void *)NULL);
+	os_task_create("normal",0,0, task_routine_normal, (void *)NULL);
+	os_task_create(TASK_PRODUCER,0,0, task_routine_producer, (void *)NULL);
+	os_task_create(TASK_CONSUMER1,0,0, task_routine_consumer1, (void *)NULL);
+	os_task_create(TASK_CONSUMER2,0,0, task_routine_consumer2, (void *)NULL);
 	
 	while(1)
 	{
 		//system("clear");
-		mt_task_mm_show();
-		mt_mm_show();
+		os_task_mm_show();
+		os_mm_show();
 		sleep(1);
 
 		if(cnt == 3*1)
