@@ -13,6 +13,8 @@ void os_free(void *ptr);
 void *os_calloc(os_size_t nmemb, os_size_t size);
 void *os_realloc(void *ptr, os_size_t size);
 
+int os_system(const char *command);
+unsigned int os_sleep(unsigned int seconds);
 
 
 #ifdef  __cplusplus

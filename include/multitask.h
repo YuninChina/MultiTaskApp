@@ -19,6 +19,7 @@ extern "C" {
 #include "os_task.h" 
 #include "os_broadcast.h" 
 #include "os_multicast.h" 
+#include "os_stdlibc.h" 
 
 
 #ifdef  __cplusplus
