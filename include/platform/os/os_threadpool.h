@@ -9,11 +9,11 @@ extern "C" {
 #define MAX_QUEUE 65536
 
 
-typedef struct mt_threadpool_s mt_threadpool_t;
+typedef struct os_threadpool_s os_threadpool_t;
 
-mt_threadpool_t *mt_threadpool_create(int thread_count, int queue_size, int flags);
-void mt_threadpool_destroy(mt_threadpool_t *pool, int flags);
-int mt_threadpool_add(mt_threadpool_t *pool, void (*routine)(void *),void *arg, int flags);
+os_threadpool_t *os_threadpool_create(int thread_count, int queue_size, int flags);
+void os_threadpool_destroy(os_threadpool_t *pool, int flags);
+int os_threadpool_add(os_threadpool_t *pool, void (*routine)(void *),void *arg, int flags);
 
 
 #ifdef  __cplusplus

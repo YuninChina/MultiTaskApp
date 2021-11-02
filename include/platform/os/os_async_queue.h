@@ -6,15 +6,15 @@ extern "C" {
 #endif
 
 
-typedef struct mt_async_queue_s mt_async_queue_t;
+typedef struct os_async_queue_s os_async_queue_t;
 
-mt_async_queue_t *mt_async_queue_new(void);
-void mt_async_queue_free(mt_async_queue_t *q);
-unsigned int mt_async_queue_length(mt_async_queue_t *q);
-void mt_async_queue_push_tail(mt_async_queue_t *q,void *data);
-void mt_async_queue_push_head(mt_async_queue_t *q,void *data);
-void *mt_async_queue_pop_tail(mt_async_queue_t *q);
-void *mt_async_queue_pop_head(mt_async_queue_t *q);
+os_async_queue_t *os_async_queue_new(void);
+void os_async_queue_free(os_async_queue_t *q);
+unsigned int os_async_queue_length(os_async_queue_t *q);
+void os_async_queue_push_tail(os_async_queue_t *q,void *data);
+void os_async_queue_push_head(os_async_queue_t *q,void *data);
+void *os_async_queue_pop_tail(os_async_queue_t *q);
+void *os_async_queue_pop_head(os_async_queue_t *q);
 
 
 #ifdef  __cplusplus

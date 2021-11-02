@@ -12,11 +12,11 @@ extern "C" {
 /* Private typedef -----------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-static mt_log_callback_t g_mt_log_callback = NULL;
+static os_log_callback_t g_os_log_callback = NULL;
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
-const char *mt_log_enum2str(MMP_LOG_ENUM level)
+const char *os_log_enum2str(MMP_LOG_ENUM level)
 {
 	const char *ret = "[U]";
 	switch(level)
@@ -34,7 +34,7 @@ const char *mt_log_enum2str(MMP_LOG_ENUM level)
 }
 
 
-const char *mt_log_colour_get(MMP_LOG_ENUM level)
+const char *os_log_colour_get(MMP_LOG_ENUM level)
 {
     const char *ret = COLOUR_NONE;
     switch(level)
@@ -51,7 +51,7 @@ const char *mt_log_colour_get(MMP_LOG_ENUM level)
     return ret;
 }
 
-void mt_log_message(int level
+void os_log_message(int level
 	,const char *file_name
 	,int line
 	,const char *func_name
@@ -66,24 +66,24 @@ void mt_log_message(int level
 	thread_name_get(task_name);
 	time2str(time_buf,sizeof(time_buf));
 
-	ret = snprintf(log_buffer+ret,sizeof(log_buffer)-ret,"%s%s ",mt_log_colour_get(level),time_buf);
+	ret = snprintf(log_buffer+ret,sizeof(log_buffer)-ret,"%s%s ",os_log_colour_get(level),time_buf);
 	ret += snprintf(log_buffer+ret,sizeof(log_buffer)-ret,"(%s,%d)",file_name,line);
 	ret += snprintf(log_buffer+ret,sizeof(log_buffer)-ret,"[%s]",task_name);
-	ret += snprintf(log_buffer+ret,sizeof(log_buffer)-ret,"%s",mt_log_enum2str(level));
+	ret += snprintf(log_buffer+ret,sizeof(log_buffer)-ret,"%s",os_log_enum2str(level));
 	/* 组包 */
     va_list args;
     va_start(args, fmt);
     vsnprintf(log_buffer+ret,sizeof(log_buffer)-ret,fmt,args);
     va_end(args);
 	/* 输出 */
-	if(g_mt_log_callback) 
-		g_mt_log_callback(level,log_buffer);
+	if(g_os_log_callback) 
+		g_os_log_callback(level,log_buffer);
 	else
 		printf("%s\n""\e[0m",log_buffer);
 }
 
 
-void mt_log_assert(const char *source
+void os_log_assert(const char *source
 	,const char *expr
 	,const char *file_name
 	,int line
@@ -109,8 +109,8 @@ void mt_log_assert(const char *source
 	vsnprintf(log_buffer+ret,sizeof(log_buffer)-ret,fmt,args);
 	va_end(args);
 	/* 输出 */
-	if(g_mt_log_callback) 
-		g_mt_log_callback(MLOG_FATAL,log_buffer);
+	if(g_os_log_callback) 
+		g_os_log_callback(MLOG_FATAL,log_buffer);
 	else
 		printf("%s\n""\e[0m",log_buffer);
 }

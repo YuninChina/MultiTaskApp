@@ -7,16 +7,16 @@
 extern "C" {
 #endif
 
-typedef struct mt_queue_s mt_queue_t;
+typedef struct os_queue_s os_queue_t;
 
-mt_queue_t *mt_queue_new(void);
-void mt_queue_free(mt_queue_t *q);
-unsigned int mt_queue_length(mt_queue_t *q);
-unsigned int mt_queue_empty(mt_queue_t *q);
-void mt_queue_push_tail(mt_queue_t *q,void *data);
-void mt_queue_push_head(mt_queue_t *q,void *data);
-void *mt_queue_pop_tail(mt_queue_t *q);
-void *mt_queue_pop_head(mt_queue_t *q);
+os_queue_t *os_queue_new(void);
+void os_queue_free(os_queue_t *q);
+unsigned int os_queue_length(os_queue_t *q);
+unsigned int os_queue_empty(os_queue_t *q);
+void os_queue_push_tail(os_queue_t *q,void *data);
+void os_queue_push_head(os_queue_t *q,void *data);
+void *os_queue_pop_tail(os_queue_t *q);
+void *os_queue_pop_head(os_queue_t *q);
 
 
 #ifdef  __cplusplus

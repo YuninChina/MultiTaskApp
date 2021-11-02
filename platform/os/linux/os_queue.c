@@ -4,19 +4,19 @@
 #include <unistd.h>
 #include <string.h>
 
-#include "mt_queue.h"
+#include "os_queue.h"
 #include "os_log.h"
 #include "multitask.h"
 
-struct mt_queue_s {
+struct os_queue_s {
 	struct list_head list;
 	void *data;
 };
 
 
-mt_queue_t *mt_queue_new(void)
+os_queue_t *os_queue_new(void)
 {
-	mt_queue_t *q = NULL;
+	os_queue_t *q = NULL;
 	q = MALLOC(sizeof(*q));
 	RETURN_VAL_IF_FAIL(q, NULL);
 	memset(q,0,sizeof(*q));
@@ -24,9 +24,9 @@ mt_queue_t *mt_queue_new(void)
 	return q;
 }
 
-void mt_queue_free(mt_queue_t *q)
+void os_queue_free(os_queue_t *q)
 {
-	mt_queue_t *queue = NULL,*queue_next = NULL;
+	os_queue_t *queue = NULL,*queue_next = NULL;
 	if(q)
 	{
 		list_for_each_entry_safe(queue, queue_next, &q->list,list) {
@@ -42,21 +42,21 @@ void mt_queue_free(mt_queue_t *q)
 	}
 }
 
-unsigned int mt_queue_length(mt_queue_t *q)
+unsigned int os_queue_length(os_queue_t *q)
 {
 	return list_length(&q->list);
 }
 
-unsigned int mt_queue_empty(mt_queue_t *q)
+unsigned int os_queue_empty(os_queue_t *q)
 {
 	RETURN_VAL_IF_FAIL(q, 0);
 	return list_empty(&q->list);
 }
 
 
-void mt_queue_push_tail(mt_queue_t *q,void *data)
+void os_queue_push_tail(os_queue_t *q,void *data)
 {
-	mt_queue_t *node = NULL;
+	os_queue_t *node = NULL;
 	RETURN_IF_FAIL(q);
 	node = MALLOC(sizeof(*node));
 	RETURN_IF_FAIL(node);
@@ -64,9 +64,9 @@ void mt_queue_push_tail(mt_queue_t *q,void *data)
 	list_add_tail(&node->list, &q->list);
 }
 
-void mt_queue_push_head(mt_queue_t *q,void *data)
+void os_queue_push_head(os_queue_t *q,void *data)
 {
-	mt_queue_t *node = NULL;
+	os_queue_t *node = NULL;
 	RETURN_IF_FAIL(q);
 	node = MALLOC(sizeof(*node));
 	RETURN_IF_FAIL(node);
@@ -74,10 +74,10 @@ void mt_queue_push_head(mt_queue_t *q,void *data)
 	list_add(&node->list, &q->list);
 }
 
-void *mt_queue_pop_tail(mt_queue_t *q)
+void *os_queue_pop_tail(os_queue_t *q)
 {
 	void *data = NULL;
-	mt_queue_t *queue = NULL,*queue_next = NULL;
+	os_queue_t *queue = NULL,*queue_next = NULL;
 	RETURN_VAL_IF_FAIL(q, NULL);
 	list_for_each_entry_safe_reverse(queue, queue_next, &q->list,list) 
 	{
@@ -90,10 +90,10 @@ void *mt_queue_pop_tail(mt_queue_t *q)
 	return data;
 }
 
-void *mt_queue_pop_head(mt_queue_t *q)
+void *os_queue_pop_head(os_queue_t *q)
 {
 	void *data = NULL;
-	mt_queue_t *queue = NULL,*queue_next = NULL;
+	os_queue_t *queue = NULL,*queue_next = NULL;
 	RETURN_VAL_IF_FAIL(q, NULL);
 	list_for_each_entry_safe(queue, queue_next, &q->list,list) 
 	{

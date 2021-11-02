@@ -16,54 +16,54 @@
 
 extern pid_t gettid(void);
 
-typedef struct mt_task_info_s {
+typedef struct os_task_info_s {
 	const char *name;
 	unsigned long stack_size;
 	int priority;
-	mt_task_func_t func;
+	os_task_func_t func;
 	void *arg;
 	/* other */
 	unsigned long tid;
 	unsigned long pid;
-}mt_task_info_t;
+}os_task_info_t;
 
-struct mt_task_s {
+struct os_task_s {
 	struct list_head list;
 	///////////////////////
 	struct list_head head;
 	pthread_mutex_t mutex;
-	mt_task_info_t info;
-	mt_async_queue_t *q;
+	os_task_info_t info;
+	os_async_queue_t *q;
 };
 
 
-pthread_mutex_t mt_task_mutex = PTHREAD_MUTEX_INITIALIZER;
-static LIST_HEAD(mt_task_list);
+pthread_mutex_t os_task_mutex = PTHREAD_MUTEX_INITIALIZER;
+static LIST_HEAD(os_task_list);
 
 
-static void mt_task_exit(mt_task_t *task)
+static void os_task_exit(os_task_t *task)
 {
-	mt_task_t *node = NULL,*tmp = NULL;
-	mt_task_mm_node_t *mnode = NULL,*tmnode = NULL;
+	os_task_t *node = NULL,*tmp = NULL;
+	os_task_mm_node_t *mnode = NULL,*tmnode = NULL;
 	
 	if(task)
 	{
-		MLOGW("mt_task_exit: %s(%lu : %lu)\n",task->info.name,task->info.pid,task->info.tid);
-		if(task->q) mt_async_queue_free(task->q);
+		MLOGW("os_task_exit: %s(%lu : %lu)\n",task->info.name,task->info.pid,task->info.tid);
+		if(task->q) os_async_queue_free(task->q);
 		task->q = NULL;
-		pthread_mutex_lock(&mt_task_mutex);
-		list_for_each_entry_safe(node, tmp,&mt_task_list, list) {
+		pthread_mutex_lock(&os_task_mutex);
+		list_for_each_entry_safe(node, tmp,&os_task_list, list) {
 			if(node == task)
 			{
 				list_del(&node->list);
 				break;
 			}
 		}
-		pthread_mutex_unlock(&mt_task_mutex);
+		pthread_mutex_unlock(&os_task_mutex);
 		printf("%-15s %-15s %-15s %-32s %-15s %-15s %-15s\n",
 		"[task]","[tid]","[pid]","[function]","[line]","[addr]","[size]");
 		list_for_each_entry_safe(mnode, tmnode,&task->head, list) {
-			printf("%-15s %-15lu %-15lu %-32s %-15lu %-15p %-15lu\n",mnode->mt_task_name,
+			printf("%-15s %-15lu %-15lu %-32s %-15lu %-15p %-15lu\n",mnode->os_task_name,
 			mnode->tid,mnode->pid,mnode->func,mnode->line,mnode->addr,mnode->size);
 			list_del(&mnode->list);
 			free(mnode);
@@ -74,23 +74,23 @@ static void mt_task_exit(mt_task_t *task)
 	}
 }
 
-static void *__mt_task_routine(void *arg)
+static void *__os_task_routine(void *arg)
 {
 	pthread_detach(pthread_self());
-	mt_task_t *task = (mt_task_t *)arg;
+	os_task_t *task = (os_task_t *)arg;
 	RETURN_VAL_IF_FAIL(task,NULL);
 	task->info.tid = (unsigned long)pthread_self();
 	task->info.pid = (unsigned long)gettid();
 	prctl(PR_SET_NAME,task->info.name);
 	if(task->info.func) 
 		task->info.func(task->info.arg);
-	mt_task_exit(task);
+	os_task_exit(task);
 	return NULL;
 }
 
-mt_task_t *mt_task_create(const char *name,unsigned long stack_size,int priority,mt_task_func_t func,void *arg)
+os_task_t *os_task_create(const char *name,unsigned long stack_size,int priority,os_task_func_t func,void *arg)
 {
-	mt_task_t *task = NULL;
+	os_task_t *task = NULL;
 	pthread_t thread_id;
 	task = malloc(sizeof(*task));
 	RETURN_VAL_IF_FAIL(task,NULL);
@@ -100,17 +100,17 @@ mt_task_t *mt_task_create(const char *name,unsigned long stack_size,int priority
 	task->info.priority = priority;
 	task->info.func = func;
 	task->info.arg = arg;
-	task->q = mt_async_queue_new();
+	task->q = os_async_queue_new();
 	
 	INIT_LIST_HEAD(&task->head);
 	pthread_mutex_init(&task->mutex, NULL);
-	pthread_mutex_lock(&mt_task_mutex);
-	list_add_tail(&task->list, &mt_task_list);
-	pthread_mutex_unlock(&mt_task_mutex);
+	pthread_mutex_lock(&os_task_mutex);
+	list_add_tail(&task->list, &os_task_list);
+	pthread_mutex_unlock(&os_task_mutex);
 	
-	if(pthread_create(&thread_id, NULL, __mt_task_routine, (void *)task) != 0)
+	if(pthread_create(&thread_id, NULL, __os_task_routine, (void *)task) != 0)
 	{
-		mt_async_queue_free(task->q);
+		os_async_queue_free(task->q);
 		task->q = NULL;
 		list_del_init(&task->list);
 		pthread_mutex_destroy(&task->mutex);
@@ -121,9 +121,9 @@ mt_task_t *mt_task_create(const char *name,unsigned long stack_size,int priority
 	return task;
 }
 
-mt_task_t *mt_task_create2(const char *name,unsigned long stack_size,int priority,int async,mt_task_func_t func,void *arg)
+os_task_t *os_task_create2(const char *name,unsigned long stack_size,int priority,int async,os_task_func_t func,void *arg)
 {
-	mt_task_t *task = NULL;
+	os_task_t *task = NULL;
 	pthread_t thread_id;
 	task = malloc(sizeof(*task));
 	assert(task);
@@ -133,17 +133,17 @@ mt_task_t *mt_task_create2(const char *name,unsigned long stack_size,int priorit
 	task->info.priority = priority;
 	task->info.func = func;
 	task->info.arg = arg;
-	if(async > 0) task->q = mt_async_queue_new();
+	if(async > 0) task->q = os_async_queue_new();
 	
 	INIT_LIST_HEAD(&task->head);
 	pthread_mutex_init(&task->mutex, NULL);
-	pthread_mutex_lock(&mt_task_mutex);
-	list_add_tail(&task->list, &mt_task_list);
-	pthread_mutex_unlock(&mt_task_mutex);
+	pthread_mutex_lock(&os_task_mutex);
+	list_add_tail(&task->list, &os_task_list);
+	pthread_mutex_unlock(&os_task_mutex);
 	
-	if(pthread_create(&thread_id, NULL, __mt_task_routine, (void *)task) != 0)
+	if(pthread_create(&thread_id, NULL, __os_task_routine, (void *)task) != 0)
 	{
-		mt_async_queue_free(task->q);
+		os_async_queue_free(task->q);
 		task->q = NULL;
 		list_del_init(&task->list);
 		pthread_mutex_destroy(&task->mutex);
@@ -156,95 +156,95 @@ mt_task_t *mt_task_create2(const char *name,unsigned long stack_size,int priorit
 }
 
 
-mt_async_queue_t *mt_task_aq_get(const char *name)
+os_async_queue_t *os_task_aq_get(const char *name)
 {
-	mt_async_queue_t *qq = NULL;
-	mt_task_t *node = NULL,*tmp = NULL;
-	pthread_mutex_lock(&mt_task_mutex);
-	list_for_each_entry_safe(node, tmp,&mt_task_list, list) {
+	os_async_queue_t *qq = NULL;
+	os_task_t *node = NULL,*tmp = NULL;
+	pthread_mutex_lock(&os_task_mutex);
+	list_for_each_entry_safe(node, tmp,&os_task_list, list) {
 		if(0 == strcmp(name,node->info.name))
 		{
 			qq = node->q;
 			break;
 		}
 	}
-	pthread_mutex_unlock(&mt_task_mutex);
-	return (mt_async_queue_t *)qq;
+	pthread_mutex_unlock(&os_task_mutex);
+	return (os_async_queue_t *)qq;
 }
 
-const char *mt_task_name_get_from_pid(unsigned long pid)
+const char *os_task_name_get_from_pid(unsigned long pid)
 {
-	mt_task_t *node = NULL,*tmp = NULL;
+	os_task_t *node = NULL,*tmp = NULL;
 	const char *name = NULL;
-	pthread_mutex_lock(&mt_task_mutex);
-	list_for_each_entry_safe(node, tmp,&mt_task_list, list) {
+	pthread_mutex_lock(&os_task_mutex);
+	list_for_each_entry_safe(node, tmp,&os_task_list, list) {
 		if(pid == node->info.pid)
 		{
 			name = node->info.name;
 			break;
 		}
 	}
-	pthread_mutex_unlock(&mt_task_mutex);
+	pthread_mutex_unlock(&os_task_mutex);
 	return name;
 }
 
-const char *mt_task_name_get_from_tid(unsigned long tid)
+const char *os_task_name_get_from_tid(unsigned long tid)
 {
-	mt_task_t *node = NULL,*tmp = NULL;
+	os_task_t *node = NULL,*tmp = NULL;
 	const char *name = NULL;
-	pthread_mutex_lock(&mt_task_mutex);
-	list_for_each_entry_safe(node, tmp,&mt_task_list, list) {
+	pthread_mutex_lock(&os_task_mutex);
+	list_for_each_entry_safe(node, tmp,&os_task_list, list) {
 		if(tid == node->info.tid)
 		{
 			name = node->info.name;
 			break;
 		}
 	}
-	pthread_mutex_unlock(&mt_task_mutex);
+	pthread_mutex_unlock(&os_task_mutex);
 	return name;
 }
 
 
-mt_async_queue_t *mt_task_aq_self(void)
+os_async_queue_t *os_task_aq_self(void)
 {
-	mt_async_queue_t *qq = NULL;
-	mt_task_t *node = NULL,*tmp = NULL;
+	os_async_queue_t *qq = NULL;
+	os_task_t *node = NULL,*tmp = NULL;
 	unsigned long tid = (unsigned long)pthread_self();
-	pthread_mutex_lock(&mt_task_mutex);
-	list_for_each_entry_safe(node, tmp,&mt_task_list, list) {
+	pthread_mutex_lock(&os_task_mutex);
+	list_for_each_entry_safe(node, tmp,&os_task_list, list) {
 		if(tid == node->info.tid)
 		{
 			qq = node->q;
 			break;
 		}
 	}
-	pthread_mutex_unlock(&mt_task_mutex);
+	pthread_mutex_unlock(&os_task_mutex);
 	return qq;
 }
 
 
 
-void mt_task_mm_add(unsigned long tid,mt_task_mm_node_t *mnode)
+void os_task_mm_add(unsigned long tid,os_task_mm_node_t *mnode)
 {
-	mt_task_t *node = NULL,*tmp = NULL;
-	pthread_mutex_lock(&mt_task_mutex);
-	list_for_each_entry_safe(node, tmp,&mt_task_list, list) {
+	os_task_t *node = NULL,*tmp = NULL;
+	pthread_mutex_lock(&os_task_mutex);
+	list_for_each_entry_safe(node, tmp,&os_task_list, list) {
 		if(tid == node->info.tid)
 		{
 			list_add_tail(&mnode->list, &node->head);
 			break;
 		}
 	}
-	pthread_mutex_unlock(&mt_task_mutex);
+	pthread_mutex_unlock(&os_task_mutex);
 }
 
 
-void mt_task_mm_del(unsigned long tid,void *addr)
+void os_task_mm_del(unsigned long tid,void *addr)
 {
-	mt_task_t *node = NULL,*tmp = NULL;
-	pthread_mutex_lock(&mt_task_mutex);
-	list_for_each_entry_safe(node, tmp,&mt_task_list, list) {
-		mt_task_mm_node_t *mnode = NULL,*tmnode = NULL;
+	os_task_t *node = NULL,*tmp = NULL;
+	pthread_mutex_lock(&os_task_mutex);
+	list_for_each_entry_safe(node, tmp,&os_task_list, list) {
+		os_task_mm_node_t *mnode = NULL,*tmnode = NULL;
 		list_for_each_entry_safe(mnode, tmnode,&node->head, list) {
 			if(addr == mnode->addr)
 			{
@@ -255,65 +255,65 @@ void mt_task_mm_del(unsigned long tid,void *addr)
 		}
 	}
 succ:	
-	pthread_mutex_unlock(&mt_task_mutex);
+	pthread_mutex_unlock(&os_task_mutex);
 }
 
 
-void mt_task_mm_show(void)
+void os_task_mm_show(void)
 {
-	mt_task_t *node = NULL,*tmp = NULL;
+	os_task_t *node = NULL,*tmp = NULL;
     char time[64] = {0,};
-    unsigned long mt_task_pid = 0,mt_task_tid = 0;
+    unsigned long os_task_pid = 0,os_task_tid = 0;
 	unsigned long mem_size = 0;
-	const char *mt_task_name = NULL;
+	const char *os_task_name = NULL;
 	unsigned long *p_arr = NULL;
 	unsigned int arr_size = 0;
 	int ret = 0;
 	int i;
 	//////////////////////////////
     time2str(time,sizeof(time));
-	printf("\n\n=========================================== mt_task_mm_show [%s] ===========================================\n",time);
+	printf("\n\n=========================================== os_task_mm_show [%s] ===========================================\n",time);
 	printf("%-20s %-20s %-20s %-20s\n","[name]","[pid]","[tid]","[size]");
 	
 	ret = child_pid_get(&p_arr,&arr_size);
 	RETURN_IF_FAIL(0 == ret);
 	for(i = 0;i < arr_size;i++)
 	{
-		mt_task_pid = p_arr[i];
+		os_task_pid = p_arr[i];
 		///////////////////////////////
 		mem_size = 0;
-		mt_task_name = NULL;
-		list_for_each_entry_safe(node, tmp,&mt_task_list, list) {
-			if(mt_task_pid == node->info.pid)
+		os_task_name = NULL;
+		list_for_each_entry_safe(node, tmp,&os_task_list, list) {
+			if(os_task_pid == node->info.pid)
 			{
-				mt_task_name = node->info.name;
-				mt_task_tid = node->info.tid;
+				os_task_name = node->info.name;
+				os_task_tid = node->info.tid;
 				///////////////////////////////
-				mt_task_mm_node_t *mnode = NULL,*tmnode = NULL;
+				os_task_mm_node_t *mnode = NULL,*tmnode = NULL;
 				list_for_each_entry_safe(mnode, tmnode,&node->head, list) {
 					mem_size += mnode->size;
 				}
 			}
 		}
-		printf("%-20s %-20lu %-20lu %-20lu\n",mt_task_name,mt_task_pid,mt_task_tid,mem_size);
+		printf("%-20s %-20lu %-20lu %-20lu\n",os_task_name,os_task_pid,os_task_tid,mem_size);
 	}
 	child_pid_free(p_arr);
 }
 
-int mt_task_mm_json_get(char **ppjson)
+int os_task_mm_json_get(char **ppjson)
 {
 	char *pjson = NULL;
 	RETURN_VAL_IF_FAIL(ppjson,-1);
 	
-	mt_task_t *node = NULL,*tmp = NULL;
+	os_task_t *node = NULL,*tmp = NULL;
 
 	char cmd[1024] = {0,};
 	FILE *fp = NULL;
     char buf[1024] = {0,};
     char *pResult = NULL;
-    unsigned long mt_task_pid = 0,mt_task_tid = 0;
+    unsigned long os_task_pid = 0,os_task_tid = 0;
 	unsigned long mem_size = 0;
-	const char *mt_task_name = NULL;
+	const char *os_task_name = NULL;
 	pid_t pid = getpid();
 	memset(cmd,0,sizeof(cmd));
     snprintf(cmd,sizeof(cmd),"ls /proc/%d/task/ | xargs",pid);
@@ -336,20 +336,20 @@ int mt_task_mm_json_get(char **ppjson)
 		sub = strtok(str," ");
 		if(NULL == sub)
 			break;
-		sscanf(str,"%lu",&mt_task_pid);
-		//printf("pid=%d, mt_task_pid: %d\n",pid,mt_task_pid);
+		sscanf(str,"%lu",&os_task_pid);
+		//printf("pid=%d, os_task_pid: %d\n",pid,os_task_pid);
 		str += (strlen(sub)+1);
 
 		///////////////////////////////
 		mem_size = 0;
-		mt_task_name = NULL;
-		list_for_each_entry_safe(node, tmp,&mt_task_list, list) {
-			if(mt_task_pid == node->info.pid)
+		os_task_name = NULL;
+		list_for_each_entry_safe(node, tmp,&os_task_list, list) {
+			if(os_task_pid == node->info.pid)
 			{
-				mt_task_name = node->info.name;
-				mt_task_tid = node->info.tid;
+				os_task_name = node->info.name;
+				os_task_tid = node->info.tid;
 				///////////////////////////////
-				mt_task_mm_node_t *mnode = NULL,*tmnode = NULL;
+				os_task_mm_node_t *mnode = NULL,*tmnode = NULL;
 				list_for_each_entry_safe(mnode, tmnode,&node->head, list) {
 					mem_size += mnode->size;
 				}
@@ -362,9 +362,9 @@ int mt_task_mm_json_get(char **ppjson)
 		assert(jVal);
 		jObj = json_value_get_object(jVal);
 		assert(jObj);
-		json_object_dotset_string(jObj, "name", mt_task_name);
-		json_object_dotset_number(jObj, "pid", mt_task_pid);
-		json_object_dotset_number(jObj, "tid", mt_task_tid);
+		json_object_dotset_string(jObj, "name", os_task_name);
+		json_object_dotset_number(jObj, "pid", os_task_pid);
+		json_object_dotset_number(jObj, "tid", os_task_tid);
 		json_object_dotset_number(jObj, "size", mem_size);
 		json_array_append_value(jArrRoot,jVal);
 	} while(1);
@@ -377,10 +377,10 @@ int mt_task_mm_json_get(char **ppjson)
 
 
 
-static mt_task_t _task;
-static int __mt_task_init(void)
+static os_task_t _task;
+static int __os_task_init(void)
 {
-	//printf("enter __mt_task_init()\n");
+	//printf("enter __os_task_init()\n");
 	static char _name[32] = {0,};
 	memset(&_task,0,sizeof(_task));
 	prctl(PR_GET_NAME,_name);
@@ -395,17 +395,17 @@ static int __mt_task_init(void)
 	
 	INIT_LIST_HEAD(&_task.head);
 	pthread_mutex_init(&_task.mutex, NULL);
-	pthread_mutex_lock(&mt_task_mutex);
-	list_add_tail(&_task.list, &mt_task_list);
-	pthread_mutex_unlock(&mt_task_mutex);
+	pthread_mutex_lock(&os_task_mutex);
+	list_add_tail(&_task.list, &os_task_list);
+	pthread_mutex_unlock(&os_task_mutex);
 	return 0;
 }
 
-static void __mt_task_exit(void)
+static void __os_task_exit(void)
 {
 	pthread_mutex_destroy(&_task.mutex);
 }
 
-pure_init(__mt_task_init);
-module_exit(__mt_task_exit);
+pure_init(__os_task_init);
+module_exit(__os_task_exit);
 
