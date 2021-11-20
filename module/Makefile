@@ -1,4 +1,4 @@
 
 obj-y := 
-obj-y += cbus/
+obj-y += mtbus/
 
