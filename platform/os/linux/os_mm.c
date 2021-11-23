@@ -16,6 +16,7 @@ pthread_mutex_t os_mm_mutex = PTHREAD_MUTEX_INITIALIZER;
 static LIST_HEAD(os_mm_list);
 #endif
 
+extern pid_t gettid(void);
 
 void *os_mm_malloc(const char *func,unsigned long line,unsigned long size)
 {

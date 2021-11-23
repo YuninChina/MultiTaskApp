@@ -14,7 +14,13 @@
 
 #include "multitask.h"
 
-extern pid_t gettid(void);
+#include <sys/syscall.h>
+
+__attribute__((weak)) pid_t gettid(void) 
+{
+	return syscall(SYS_gettid);
+}
+
 
 typedef struct os_task_info_s {
 	const char *name;
