@@ -20,6 +20,7 @@ extern "C" {
 #include "os_broadcast.h" 
 #include "os_multicast.h" 
 #include "os_stdlibc.h" 
+#include "os_evdriver.h" 
 
 
 #ifdef  __cplusplus
