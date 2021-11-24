@@ -3,6 +3,7 @@ src := $(obj)
 lib_name := ${strip $(subst /,_, ${obj})}
 
 PHONY := __build
+PHONY += sub_target
 
 obj-y :=
 

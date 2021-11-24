@@ -14,3 +14,5 @@ obj-y += os_task.o
 obj-y += os_thread.o
 obj-y += os_threadpool.o
 
+obj-y += glib/
+
