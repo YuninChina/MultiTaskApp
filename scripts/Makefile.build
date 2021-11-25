@@ -9,7 +9,7 @@ obj-y :=
 
 private-cflags :=
 
-INSTALL_LIB := libs
+INSTALL_LIB := target/lib
 
 include ./${src}/Makefile
 
@@ -30,7 +30,7 @@ __build: ${builtin-target} $(subdir-y) ${depends} FORCE
 
 ifdef builtin-target
 $(builtin-target): $(obj-y) FORCE
-	$(if ${obj-y},mkdir -p ./libs)
+	$(if ${obj-y},mkdir -p ${INSTALL_LIB})
 #	$(if ${obj-y},${CC} ${LDFLAGS} -o $@.so $(obj-y))
 #	$(if ${obj-y},install -p -m 0644 $@.so ${INSTALL_LIB})
 	$(if ${obj-y},${LD} -r -o  $@.a  $(obj-y) ) 

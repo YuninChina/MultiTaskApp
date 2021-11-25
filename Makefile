@@ -2,9 +2,9 @@
 
 PHONY : all
 
-TARGET_NAME ?= bin/multitask
-LIBCOMM_D_NAME ?= libs/libmultitask.so
-LIBCOMM_S_NAME ?= libs/libmultitask.a
+TARGET_NAME ?= target/bin/multitask
+LIBCOMM_D_NAME ?= target/lib/libmultitask.so
+LIBCOMM_S_NAME ?= target/lib/libmultitask.a
 
 #############################3
 
@@ -79,7 +79,7 @@ LINK_SHARED ?= -Wl,-Bdynamic
 LINK_FALGS ?=
 LINK_SLIBS ?=
 LINK_DLIBS ?=
-INSTALL_LIB ?= libs
+INSTALL_LIB ?= target/lib
 
 export LINK_STATIC LINK_SHARED LINK_FALGS LINK_SLIBS LINK_DLIBS INSTALL_LIB
 
@@ -123,7 +123,7 @@ MERGE_LDFLAGS := -z defs -z muldefs -undefined -Bsymbolic -shared
 export AS LD CC CPP AR NM STRIP OBJCOPY OBJDUMP RANLIB CFLAGS LDFLAGS MERGE_LDFLAGS
 
 TEST_CFLAGS ?= ${CFLAGS}
-LINK_PATH := -L libs
+LINK_PATH := -L target/lib
 LD_LIBS := -lmultitask -lpthread -lm -lrt
 PLATFORM_LIBS :=
 
@@ -173,7 +173,7 @@ build_3th: FORCE
 objs := init/main.o
 
 all:  $(dirs) ${objs} build_comms_static_lib FORCE
-	mkdir -p bin
+	mkdir -p target/bin target/lib target/include
 	$(CC) ${CFLAGS} ${LINK_PATH} -o ${TARGET_NAME} ${objs} ${LD_LIBS}
 
 test_dirs := sample/
@@ -198,7 +198,7 @@ clean: opensouce_clean 	FORCE
 
 distclean: clean
 	@echo ">>> distclean target"
-	@rm -fr bin/ libs/ 
+	@rm -fr target
 	@exit 0
 
 help: 
