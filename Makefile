@@ -192,6 +192,8 @@ test: $(test_dirs) FORCE
 
 opensouce_clean: FORCE
 	@rm -fr platform/os/linux_glib/glib/zlib-1.2.11
+	@rm -fr platform/os/linux_glib/glib/glib-2.40.2
+	@rm -fr platform/os/linux_glib/glib/libffi-3.2.1
 	@exit 0
 
 clean: opensouce_clean 	FORCE
