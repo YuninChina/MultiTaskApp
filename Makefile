@@ -86,6 +86,9 @@ export LINK_STATIC LINK_SHARED LINK_FALGS LINK_SLIBS LINK_DLIBS INSTALL_LIB
 #****************************************************************************
 # GCC
 #****************************************************************************
+HOST_NAME ?=
+
+CROSS_COMPILE ?= ${HOST_NAME}-
 
 AS	= $(CROSS_COMPILE)as
 LD	= $(CROSS_COMPILE)ld
@@ -98,7 +101,9 @@ OBJCOPY = $(CROSS_COMPILE)objcopy
 OBJDUMP = $(CROSS_COMPILE)objdump
 RANLIB	= $(CROSS_COMPILE)RANLIB
 
-CFLAGS =
+HOST_NAME ?= $(CROSS_COMPILE)
+
+CFLAGS ?=
 CFLAGS += -fPIC -rdynamic -pipe -O2 -Wall
 CFLAGS += -I include 
 CFLAGS += -I include/util
@@ -112,15 +117,16 @@ else
 	CFLAGS += 
 endif
 
-LDFLAGS = 
+LDFLAGS ?= 
 LDFLAGS += -rdynamic -shared 
+LDFLAGS += -L ${INSTALL_LIB}
 
 # merge share lib flags
 MERGE_LDFLAGS := -z defs -z muldefs -undefined -Bsymbolic -shared
 #MERGE_LDFLAGS := -t -z defs -z muldefs -undefined -Bsymbolic -shared
 
 
-export AS LD CC CPP AR NM STRIP OBJCOPY OBJDUMP RANLIB CFLAGS LDFLAGS MERGE_LDFLAGS
+export AS LD CC CPP AR NM STRIP OBJCOPY OBJDUMP RANLIB CFLAGS LDFLAGS MERGE_LDFLAGS HOST_NAME
 
 TEST_CFLAGS ?= ${CFLAGS}
 LINK_PATH := -L target/lib
