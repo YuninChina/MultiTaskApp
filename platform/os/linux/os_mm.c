@@ -8,6 +8,7 @@
 #include <pthread.h>
 #include <assert.h>
 #include <sys/types.h>
+#include <sys/prctl.h>
 
 #include "multitask.h"
 
@@ -36,7 +37,7 @@ void *os_mm_malloc(const char *func,unsigned long line,unsigned long size)
 	node->line = line;
 	node->size = size;
 	node->addr = addr;
-	pthread_getname_np(tid,node->os_task_name,sizeof(node->os_task_name));
+	prctl(PR_GET_NAME,node->os_task_name);
 	os_task_mm_add(node->tid,node);
 #endif
 
@@ -50,7 +51,7 @@ void *os_mm_malloc(const char *func,unsigned long line,unsigned long size)
 	mm_node->line = line;
 	mm_node->size = size;
 	mm_node->addr = addr;
-	pthread_getname_np(tid,mm_node->os_task_name,sizeof(mm_node->os_task_name));
+	prctl(PR_GET_NAME,node->os_task_name);
 	pthread_mutex_lock(&os_mm_mutex);
 	list_add_tail(&mm_node->list, &os_mm_list);
 	pthread_mutex_unlock(&os_mm_mutex);
