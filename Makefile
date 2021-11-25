@@ -102,7 +102,7 @@ CFLAGS =
 CFLAGS += -fPIC -rdynamic -pipe -O2 -Wall
 CFLAGS += -I include 
 CFLAGS += -I include/util
-CFLAGS += -I include/platform/hal
+CFLAGS += -I include/platform/bsp
 CFLAGS += -I include/platform/os
 
 
