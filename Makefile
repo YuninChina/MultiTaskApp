@@ -153,6 +153,7 @@ $(dirs): FORCE
 build_comm_dym_lib: FORCE
 	@$(call log-echo, "make build all common lib over !!! ")
 	@$(call log-cmd, "Start building a shared library now...")
+	@rm -f ${LIBCOMM_D_NAME}
 	$(CC) ${CFLAGS} ${MERGE_LDFLAGS} -o ${LIBCOMM_D_NAME} ${LINK_PATH} \
 	${LINK_STATIC} -Wl,--whole-archive ${shell ls ${INSTALL_LIB}/*.a} ${PLATFORM_LIBS} -Wl,--no-whole-archive \
 	${LINK_SHARED} ${LINK_COMMON_DEP_DLIBS}
@@ -161,6 +162,7 @@ build_comm_dym_lib: FORCE
 build_comms_static_lib: FORCE
 	@$(call log-echo, "make build all common library over !!! ")
 	@$(call log-cmd, "Start building a static library now...")
+	@rm -f ${LIBCOMM_S_NAME}
 	${LD} -r -o ${LIBCOMM_S_NAME}  ${LINK_PATH} --whole-archive ${shell ls ${INSTALL_LIB}/*.a} ${PLATFORM_LIBS} --no-whole-archive
 	@$(call log-cmd, "make static library SUCC...")
 
@@ -180,18 +182,24 @@ $(test_dirs): FORCE
 	@make -f ${MAKEFILE_TEST_BUILD}  obj=$@
 	
 test: $(test_dirs) FORCE
-	
-clean:	FORCE
+
+opensouce_clean: FORCE
+	@rm -fr platform/os/linux_glib/glib/zlib-1.2.11
+	@exit 0
+
+clean: opensouce_clean 	FORCE
 	@echo  ">>> clean target"
 	@rm -f *.bak *.so *.a
 	@rm -f ${TARGET_NAME} ${LIBCOMM_NAME}
 	@${shell for dir in `find -maxdepth 3 -type d | grep -v git| grep -v include | grep -v \.si4project`;\
 	do rm -f $${dir}/*.o $${dir}/*.bak $${dir}/*.so $${dir}/*.a $${dir}/*.dep;done}
 	@${shell cd sample && for i in `find *.c`;do rm -f `echo $$i|sed 's/\.c//g' `;done }
+	@exit 0
 
 distclean: clean
 	@echo ">>> distclean target"
 	@rm -fr bin/ libs/ 
+	@exit 0
 
 help: 
 	@echo  'Cleaning targets:'
