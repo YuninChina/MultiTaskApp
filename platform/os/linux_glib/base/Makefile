@@ -14,3 +14,8 @@ obj-y += os_task.o
 obj-y += os_thread.o
 obj-y += os_threadpool.o
 
+
+CFLAGS += -I ${CURDIR}/target/include/glib-2.0
+CFLAGS += -I ${CURDIR}/target/lib/glib-2.0/include
+
+

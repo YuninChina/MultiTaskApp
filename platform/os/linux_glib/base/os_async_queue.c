@@ -6,6 +6,7 @@
 #include <pthread.h>
 
 #include "multitask.h"
+#include "glib.h"
 
 
 struct os_async_queue_s {
