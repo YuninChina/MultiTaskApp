@@ -19,6 +19,6 @@ lib_name_suffix :=.tar.gz
 sub_target:	
 	$(call auto_make_install_compressed_lib_once,${current_dir},${lib_name_zlib},$(lib_name_suffix),$(configure_zlib_args))
 	$(call auto_make_install_compressed_lib_once,${current_dir},${lib_name_libffi},$(lib_name_suffix),$(configure_libffi_args))
-	$(call auto_make_install_compressed_lib_once,${current_dir},${lib_name_glib},$(lib_name_suffix),$(configure_glib_args))
+	$(call auto_make_install_compressed_lib_once_dirty,${current_dir},${lib_name_glib},$(lib_name_suffix),$(configure_glib_args))
 
 
