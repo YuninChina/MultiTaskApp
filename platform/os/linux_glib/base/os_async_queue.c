@@ -9,10 +9,7 @@
 #include "glib.h"
 
 
-struct os_async_queue_s {
-	int dummy;
-};
-
+#define os_async_queue_s _GAsyncQueue
 
 os_async_queue_t *os_async_queue_new(void)
 {

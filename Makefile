@@ -193,7 +193,7 @@ opensouce_clean: FORCE
 	@rm -fr platform/os/linux_glib/glib/libffi-3.2.1
 	@exit 0
 
-clean: opensouce_clean 	FORCE
+clean: FORCE
 	@echo  ">>> clean target"
 	@rm -f *.bak *.so *.a
 	@rm -f ${TARGET_NAME} ${LIBCOMM_NAME}
@@ -202,7 +202,7 @@ clean: opensouce_clean 	FORCE
 	@${shell cd sample && for i in `find *.c`;do rm -f `echo $$i|sed 's/\.c//g' `;done }
 	@exit 0
 
-distclean: clean
+distclean: opensouce_clean clean
 	@echo ">>> distclean target"
 	@rm -fr target
 	@exit 0
