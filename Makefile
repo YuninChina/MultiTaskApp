@@ -197,7 +197,7 @@ clean: FORCE
 	@echo  ">>> clean target"
 	@rm -f *.bak *.so *.a
 	@rm -f ${TARGET_NAME} ${LIBCOMM_NAME}
-	@${shell for dir in `find -maxdepth 4 -type d | grep -v git| grep -v include | grep -v \.si4project`;\
+	@${shell for dir in `find -maxdepth 4 -type d | grep -v git| grep -v include | grep -v target |grep -v \.si4project`;\
 	do rm -f $${dir}/*.o $${dir}/*.bak $${dir}/*.so $${dir}/*.a $${dir}/*.dep;done}
 	@${shell cd sample && for i in `find *.c`;do rm -f `echo $$i|sed 's/\.c//g' `;done }
 	@exit 0
