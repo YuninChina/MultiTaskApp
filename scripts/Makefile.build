@@ -50,6 +50,7 @@ $(obj)/%.o: $(src)/%.cpp
 
 
 -include $(obj)/*.dep
+include scripts/Makefile.function
 
 PHONY += FORCE
 FORCE: 

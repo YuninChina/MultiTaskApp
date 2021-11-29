@@ -1,0 +1,41 @@
+####################################################
+# Make Function
+####################################################
+
+
+# dir , lib name , suffix ,configure args
+define auto_make_compressed_lib
+	@echo "[1;33m" ">>>>>>> Build File: $(2)$(3)" "[0;39m" ;
+	@set -x;
+	@tar -zxf $(1)/$(2)$(3) -C $(1)/ ;
+	@cd $(1)/$(2) && ./configure $(4) && make -j8;
+endef
+
+
+
+# dir , lib name , suffix ,configure args
+define auto_install_lib
+	@echo "[1;33m" ">>>>>>> Build File: $(2)$(3)" "[0;39m" ;
+	@set -x;
+	@rm $(1)/$(2)/install -f && ln -s `which install` $(1)/$(2)/install
+	@cd $(1)/$(2) && make install;
+endef
+
+
+
+
+# dir , lib name , suffix ,configure args
+define auto_make_install_compressed_lib
+	@echo "[1;33m" ">>>>>>> Build File: $(2)$(3)" "[0;39m" ;
+	@set -x;
+	@tar -zxf $(1)/$(2)$(3) -C $(1)/ ;
+	@cd $(1)/$(2) && ./configure $(4) && make -j8 && make install;
+endef
+
+
+
+
+
+
+
+

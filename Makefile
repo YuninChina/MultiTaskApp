@@ -87,8 +87,7 @@ export LINK_STATIC LINK_SHARED LINK_FALGS LINK_SLIBS LINK_DLIBS INSTALL_LIB
 # GCC
 #****************************************************************************
 HOST_NAME ?=
-
-CROSS_COMPILE ?= ${HOST_NAME}-
+CROSS_COMPILE ?= 
 
 AS	= $(CROSS_COMPILE)as
 LD	= $(CROSS_COMPILE)ld
@@ -104,22 +103,17 @@ RANLIB	= $(CROSS_COMPILE)ranlib
 HOST_NAME ?= $(CROSS_COMPILE)
 
 CFLAGS ?=
-CFLAGS += -fPIC -rdynamic -pipe -O2 -Wall
-CFLAGS += -I include 
-CFLAGS += -I target/include
-CFLAGS += -I include/util
-CFLAGS += -I include/platform/bsp
-CFLAGS += -I include/platform/os
-
-
-ifeq ($(CONFIG_SOC),T31)
-	CFLAGS += -muclibc
-else
-	CFLAGS += 
-endif
-
 LDFLAGS ?= 
-LDFLAGS += -rdynamic -shared 
+
+CFLAGS += -fPIC -rdynamic -pipe -O2 -Wall
+CFLAGS += -I ${CURDIR}/include 
+CFLAGS += -I ${CURDIR}/target/include
+CFLAGS += -I ${CURDIR}/include/util
+CFLAGS += -I ${CURDIR}/include/platform/bsp
+CFLAGS += -I ${CURDIR}/include/platform/os
+
+
+#LDFLAGS += -rdynamic -shared 
 #LDFLAGS += -L ${INSTALL_LIB}
 
 # merge share lib flags
@@ -131,17 +125,20 @@ export AS LD CC CPP AR NM STRIP OBJCOPY OBJDUMP RANLIB CFLAGS LDFLAGS MERGE_LDFL
 
 TEST_CFLAGS ?= ${CFLAGS}
 LINK_PATH := -L target/lib
-LD_LIBS := -lmultitask -lpthread -lm -lrt
+LD_LIBS := -lmultitask -lpthread -lm -lrt -ldl -lresolv
 PLATFORM_LIBS :=
 
-ifeq ($(CONFIG_SOC),T31)
-	PLATFORM_LIBS += -limp -lalog
-	LINK_PATH += -L /home/leon/work/Ingenic/Ingenic-SDK-T31-1.1.3/sdk/4.7.2/lib/uclibc
-	CFLAGS += -I /home/leon/work/Ingenic/Ingenic-SDK-T31-1.1.3/sdk/4.7.2/include
-	CFLAGS += -I mmp/t31
-else
+ifeq ($(HOST_NAME),arm-hisiv400-linux)
 	PLATFORM_LIBS += 
 	LINK_PATH += 
+	CFLAGS += 
+	CFLAGS += 
+else
+	LD_LIBS += -lselinux
+	PLATFORM_LIBS += 
+	LINK_PATH += 
+	CFLAGS += 
+	CFLAGS += 
 endif
 
 
@@ -179,7 +176,7 @@ build_3th: FORCE
 
 objs := init/main.o
 
-all:  $(dirs) ${objs} build_comms_static_lib FORCE
+all: ${dirs} ${objs} build_comms_static_lib FORCE
 	mkdir -p target/bin target/lib target/include
 	$(CC) ${CFLAGS} ${LINK_PATH} -o ${TARGET_NAME} ${objs} ${LD_LIBS}
 

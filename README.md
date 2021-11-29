@@ -11,6 +11,13 @@
 
 # 跨平台编译指令.
 make distclean   
-make CONFIG_OS=linux CONFIG_ARCH=arm CONFIG_SOC=hi3518ev200    
-make CONFIG_OS=linux CONFIG_ARCH=arm CONFIG_SOC=hi3518ev200 test    
+#####################################################################
+# auto make x86
+#####################################################################
+make
+
+#####################################################################
+# auto make hi3518ev200 (for glibc)
+#####################################################################
+make HOST_NAME=arm-hisiv400-linux CROSS_COMPILE=arm-hisiv400-linux-
 
