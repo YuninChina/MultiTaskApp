@@ -33,6 +33,12 @@ define auto_make_install_compressed_lib
 endef
 
 
+# path
+define file-chk
+	if [ ! -f $1 ]; then echo "y";\
+	else echo "n";\
+	fi
+endef
 
 
 
