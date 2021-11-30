@@ -15,6 +15,7 @@
 #include "multitask.h"
 
 #include <sys/syscall.h>
+#include <glib.h>
 
 __attribute__((weak)) pid_t gettid(void) 
 {
@@ -97,7 +98,6 @@ static void *__os_task_routine(void *arg)
 os_task_t *os_task_create(const char *name,unsigned long stack_size,int priority,os_task_func_t func,void *arg)
 {
 	os_task_t *task = NULL;
-	pthread_t thread_id;
 	task = malloc(sizeof(*task));
 	RETURN_VAL_IF_FAIL(task,NULL);
 	memset(task,0,sizeof(*task));
@@ -113,8 +113,8 @@ os_task_t *os_task_create(const char *name,unsigned long stack_size,int priority
 	pthread_mutex_lock(&os_task_mutex);
 	list_add_tail(&task->list, &os_task_list);
 	pthread_mutex_unlock(&os_task_mutex);
-	
-	if(pthread_create(&thread_id, NULL, __os_task_routine, (void *)task) != 0)
+
+	if(NULL == g_thread_new (name, __os_task_routine, (void *)task))
 	{
 		os_async_queue_free(task->q);
 		task->q = NULL;
@@ -130,7 +130,6 @@ os_task_t *os_task_create(const char *name,unsigned long stack_size,int priority
 os_task_t *os_task_create2(const char *name,unsigned long stack_size,int priority,int async,os_task_func_t func,void *arg)
 {
 	os_task_t *task = NULL;
-	pthread_t thread_id;
 	task = malloc(sizeof(*task));
 	assert(task);
 	memset(task,0,sizeof(*task));
@@ -147,7 +146,7 @@ os_task_t *os_task_create2(const char *name,unsigned long stack_size,int priorit
 	list_add_tail(&task->list, &os_task_list);
 	pthread_mutex_unlock(&os_task_mutex);
 	
-	if(pthread_create(&thread_id, NULL, __os_task_routine, (void *)task) != 0)
+	if(NULL == g_thread_new (name, __os_task_routine, (void *)task))
 	{
 		os_async_queue_free(task->q);
 		task->q = NULL;
@@ -155,7 +154,6 @@ os_task_t *os_task_create2(const char *name,unsigned long stack_size,int priorit
 		pthread_mutex_destroy(&task->mutex);
 		free(task);
 		task=NULL;
-		return NULL;
 		return NULL;
 	}
 	return task;
