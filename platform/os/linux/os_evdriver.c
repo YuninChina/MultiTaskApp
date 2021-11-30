@@ -203,7 +203,7 @@ int os_evdriver_run2(os_evdriver_t *evdriver,int flags)
 					ASSERT(0);
 					break;
 			}
-			if(ev_node->cb) ev_node->cb(ev_node,ev_node->user_data,events);
+			if(ev_node->cb) ev_node->cb(ev_node,ev_node->user_data);
 			
 		}
 		if (flags & EVDIRVER_ONCE)

@@ -40,7 +40,7 @@ typedef struct os_event_s {
 typedef struct os_evdriver_s os_evdriver_t;
 typedef struct os_evdriver_node_s os_evdriver_node_t;
 
-typedef void (*os_evdriver_callback_t)(os_evdriver_node_t *evnode,void *user_data,int events);
+typedef void (*os_evdriver_callback_t)(os_evdriver_node_t *evdriver,void *user_data);
 
 //////////////////////////////////////////////////////////////////////////////
 os_evdriver_t *os_evdriver_create(void);
