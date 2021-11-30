@@ -92,8 +92,11 @@ CFLAGS ?=
 LDFLAGS ?= 
 TEST_CFLAGS ?=
 MERGE_LDFLAGS ?=
+BUILD_FILE ?=
+
 
 ######################################
+export BUILD_FILE
 -include $(BUILD_FILE)
 ######################################
 AS	= $(CROSS_COMPILE)as
@@ -160,7 +163,7 @@ $(dirs): FORCE
 build_comm_dym_lib: FORCE
 	@$(call log-echo, "make build all common lib over !!! ")
 	@$(call log-cmd, "Start building a shared library now...")
-	@rm -f ${LIBCOMM_D_NAME}
+	@$(shell rm -f ${LIBCOMM_D_NAME})
 	$(CC) ${CFLAGS} ${MERGE_LDFLAGS} -o ${LIBCOMM_D_NAME} ${LINK_PATH} \
 	${LINK_STATIC} -Wl,--whole-archive ${shell ls ${INSTALL_LIB}/*.a} ${PLATFORM_LIBS} -Wl,--no-whole-archive \
 	${LINK_SHARED} ${LINK_COMMON_DEP_DLIBS}
@@ -168,8 +171,8 @@ build_comm_dym_lib: FORCE
 
 build_comms_static_lib: FORCE
 	@$(call log-echo, "make build all common library over !!! ")
-	@$(call log-cmd, "Start building a static library now... $(HOST_NAME)")
-	@rm -f ${LIBCOMM_S_NAME}
+	@$(call log-cmd, "Start building a static library now...")
+	@$(shell rm -f ${LIBCOMM_S_NAME})
 	${LD} -r -o ${LIBCOMM_S_NAME}  ${LINK_PATH} --whole-archive ${shell ls ${INSTALL_LIB}/*.a} ${PLATFORM_LIBS} --no-whole-archive
 	@$(call log-cmd, "make static library SUCC...")
 

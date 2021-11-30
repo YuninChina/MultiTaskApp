@@ -11,6 +11,7 @@ private-cflags :=
 
 INSTALL_LIB := target/lib
 
+-include $(BUILD_FILE)
 include ./${src}/Makefile
 
 CFLAGS += ${private-cflags}

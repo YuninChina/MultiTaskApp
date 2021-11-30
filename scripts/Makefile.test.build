@@ -8,7 +8,7 @@ PHONY := __build
 
 obj-y :=
 
-
+-include $(BUILD_FILE)
 include ./${src}/Makefile
 
 
