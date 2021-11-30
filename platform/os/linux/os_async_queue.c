@@ -56,7 +56,7 @@ unsigned int os_async_queue_length(os_async_queue_t *q)
 	return os_queue_length(q->queue);
 }
 
-void os_async_queue_push_tail(os_async_queue_t *q,void *data)
+void os_async_queue_push(os_async_queue_t *q,void *data)
 {
 	RETURN_IF_FAIL(q && data);
 	pthread_mutex_lock(&q->mutex);
@@ -65,27 +65,8 @@ void os_async_queue_push_tail(os_async_queue_t *q,void *data)
 	pthread_mutex_unlock(&q->mutex);
 }
 
-void os_async_queue_push_head(os_async_queue_t *q,void *data)
-{
-	RETURN_IF_FAIL(q && data);
-	pthread_mutex_lock(&q->mutex);
-	os_queue_push_head(q->queue,data);
-	pthread_cond_signal(&q->cond);
-	pthread_mutex_unlock(&q->mutex);
-}
 
-void *os_async_queue_pop_tail(os_async_queue_t *q)
-{
-	void *data = NULL;
-	RETURN_VAL_IF_FAIL(q,NULL);
-	pthread_mutex_lock(&q->mutex);
-	pthread_cond_wait(&q->cond, &q->mutex);
-	data = os_queue_pop_tail(q->queue);
-	pthread_mutex_unlock(&q->mutex);
-	return data;
-}
-
-void *os_async_queue_pop_head(os_async_queue_t *q)
+void *os_async_queue_pop(os_async_queue_t *q)
 {
 	void *data = NULL;
 	RETURN_VAL_IF_FAIL(q,NULL);
