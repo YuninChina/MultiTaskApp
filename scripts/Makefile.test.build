@@ -8,6 +8,11 @@ PHONY := __build
 
 obj-y :=
 
+
+install_lib ?= target/lib
+install_bin ?= target/bin
+
+
 -include $(BUILD_FILE)
 include ./${src}/Makefile
 
@@ -26,9 +31,9 @@ __build: ${builtin-target} $(subdir-y) FORCE
 
 ifdef builtin-target
 $(builtin-target): FORCE
-	$(if ${obj-y},mkdir -p ./target/bin)
+	$(if ${obj-y},mkdir -p $(install_bin))
 	$(if ${obj-y},$(CC) ${TEST_CFLAGS} ${LINK_PATH} -o $@ $@.c ${LD_LIBS})
-	$(if ${obj-y},install -p -m 0555 $@ ./bin)
+	$(if ${obj-y},install -p -m 0555 $@ $(install_bin))
 endif # builtin-target
 
 PHONY += $(subdir-y)

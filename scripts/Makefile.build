@@ -9,7 +9,8 @@ obj-y :=
 
 private-cflags :=
 
-INSTALL_LIB := target/lib
+install_lib ?= target/lib
+install_bin ?= target/bin
 
 -include $(BUILD_FILE)
 include ./${src}/Makefile
@@ -31,11 +32,11 @@ __build: ${builtin-target} $(subdir-y) ${depends} FORCE
 
 ifdef builtin-target
 $(builtin-target): $(obj-y) FORCE
-	$(if ${obj-y},mkdir -p ${INSTALL_LIB})
+	$(if ${obj-y},mkdir -p ${install_lib})
 #	$(if ${obj-y},${CC} ${LDFLAGS} -o $@.so $(obj-y))
-#	$(if ${obj-y},install -p -m 0644 $@.so ${INSTALL_LIB})
+#	$(if ${obj-y},install -p -m 0644 $@.so ${install_lib})
 	$(if ${obj-y},${LD} -r -o  $@.a  $(obj-y) ) 
-	$(if ${obj-y},install -p -m 0644 $@.a ${INSTALL_LIB})	
+	$(if ${obj-y},install -p -m 0644 $@.a ${install_lib})	
 endif # builtin-target
 
 PHONY += $(subdir-y)
