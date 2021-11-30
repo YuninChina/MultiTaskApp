@@ -19,5 +19,4 @@ make
 #####################################################################
 # auto make hi3518ev200 (for glibc)
 #####################################################################
-make HOST_NAME=arm-hisiv400-linux CROSS_COMPILE=arm-hisiv400-linux-
-
+make BUILD_FILE=build/hi3518ev200.make
