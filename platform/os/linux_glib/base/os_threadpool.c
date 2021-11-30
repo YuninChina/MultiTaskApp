@@ -34,7 +34,7 @@ static void *os_threadpool_thread(void *threadpool)
 	thread_name_set("threadpool");
 	while(1)
 	{
-		task = (os_threadpool_task_t *)os_async_queue_pop_head(pool->queue);
+		task = (os_threadpool_task_t *)os_async_queue_pop(pool->queue);
 		if(task && task->function)
 		{
 			task->function(task->argument);
@@ -114,7 +114,7 @@ int os_threadpool_add(os_threadpool_t *pool, void (*routine)(void *),void *arg, 
 	RETURN_VAL_IF_FAIL(task, -1);
 	task->function = routine;
 	task->argument = arg;
-	os_async_queue_push_tail(pool->queue, task);
+	os_async_queue_push(pool->queue, task);
 	return 0;
 }
 
