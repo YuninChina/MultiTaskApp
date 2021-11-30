@@ -6,7 +6,7 @@ TARGET_NAME ?= target/bin/multitask
 LIBCOMM_D_NAME ?= target/lib/libmultitask.so
 LIBCOMM_S_NAME ?= target/lib/libmultitask.a
 
-#############################3
+#############################
 
 # Shell command ###########
 TAR=tar
@@ -88,7 +88,14 @@ export LINK_STATIC LINK_SHARED LINK_FALGS LINK_SLIBS LINK_DLIBS INSTALL_LIB
 #****************************************************************************
 HOST_NAME ?=
 CROSS_COMPILE ?= 
+CFLAGS ?=
+LDFLAGS ?= 
+TEST_CFLAGS ?=
+MERGE_LDFLAGS ?=
 
+######################################
+-include $(BUILD_FILE)
+######################################
 AS	= $(CROSS_COMPILE)as
 LD	= $(CROSS_COMPILE)ld
 CC	= $(CROSS_COMPILE)gcc
@@ -100,10 +107,6 @@ OBJCOPY = $(CROSS_COMPILE)objcopy
 OBJDUMP = $(CROSS_COMPILE)objdump
 RANLIB	= $(CROSS_COMPILE)ranlib
 
-HOST_NAME ?= $(CROSS_COMPILE)
-
-CFLAGS ?=
-LDFLAGS ?= 
 
 CFLAGS += -fPIC -rdynamic -pipe -O2 -Wall
 CFLAGS += -I ${CURDIR}/include 
@@ -117,18 +120,18 @@ CFLAGS += -I ${CURDIR}/include/platform/os
 #LDFLAGS += -L ${INSTALL_LIB}
 
 # merge share lib flags
-MERGE_LDFLAGS := -z defs -z muldefs -undefined -Bsymbolic -shared
+MERGE_LDFLAGS += -z defs -z muldefs -undefined -Bsymbolic -shared
 #MERGE_LDFLAGS := -t -z defs -z muldefs -undefined -Bsymbolic -shared
 
 
-export AS LD CC CPP AR NM STRIP OBJCOPY OBJDUMP RANLIB CFLAGS LDFLAGS MERGE_LDFLAGS HOST_NAME
 
-TEST_CFLAGS ?= ${CFLAGS}
+TEST_CFLAGS += ${CFLAGS}
 LINK_PATH := -L target/lib
 LD_LIBS := -lmultitask -lpthread -lm -lrt -ldl -lresolv
 PLATFORM_LIBS :=
 
-ifeq ($(HOST_NAME),arm-hisiv400-linux)
+
+ifeq ($(strip $(HOST_NAME)),arm-hisiv400-linux)
 	PLATFORM_LIBS += 
 	LINK_PATH += 
 	CFLAGS += 
@@ -141,7 +144,7 @@ else
 	CFLAGS += 
 endif
 
-
+export AS LD CC CPP AR NM STRIP OBJCOPY OBJDUMP RANLIB CFLAGS LDFLAGS MERGE_LDFLAGS HOST_NAME
 export TEST_CFLAGS LINK_PATH LD_LIBS
 
 MAKEFILE_BUILD := scripts/Makefile.build
@@ -165,7 +168,7 @@ build_comm_dym_lib: FORCE
 
 build_comms_static_lib: FORCE
 	@$(call log-echo, "make build all common library over !!! ")
-	@$(call log-cmd, "Start building a static library now...")
+	@$(call log-cmd, "Start building a static library now... $(HOST_NAME)")
 	@rm -f ${LIBCOMM_S_NAME}
 	${LD} -r -o ${LIBCOMM_S_NAME}  ${LINK_PATH} --whole-archive ${shell ls ${INSTALL_LIB}/*.a} ${PLATFORM_LIBS} --no-whole-archive
 	@$(call log-cmd, "make static library SUCC...")
