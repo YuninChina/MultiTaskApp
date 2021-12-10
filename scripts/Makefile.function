@@ -49,5 +49,26 @@ endef
 
 
 
+# dir , lib name , suffix ,configure args
+define auto_cmake_install_compressed_lib
+	@echo "[1;33m" ">>>>>>> Build File: $(2)$(3)" "[0;39m" ;
+	@set -x;
+	tar -zxf $(1)/$(2)$(3) -C $(1)/ ;
+	cd $(1)/$(2) && mkdir -p build && cd build && cmake $(4) .. && make -j8 && make install;
+endef
+
+# dir , lib name , suffix ,configure args
+define auto_cmake_install_compressed_lib_once
+	@echo "[1;33m" ">>>>>>> Build File: $(2)$(3)" "[0;39m" ;
+	@set -x;
+	@if [ ! -d $(1)/$(2) ]; then \
+	{\
+		tar -zxf $(1)/$(2)$(3) -C $(1)/ ;\
+		cd $(1)/$(2) && mkdir -p build && cd build && cmake $(4) .. && make -j8 && make install;\
+	};\
+	else echo "[1;32m" "$(2): nothing to do!!! " "[0;39m" ;\
+	fi
+endef
+
 
 

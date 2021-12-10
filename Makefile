@@ -130,7 +130,7 @@ MERGE_LDFLAGS += -z defs -z muldefs -undefined -Bsymbolic -shared
 
 TEST_CFLAGS += ${CFLAGS}
 LINK_PATH := -L target/lib
-LD_LIBS := -lmultitask -lpthread -lm -lrt -ldl -lresolv
+LD_LIBS :=  -lpthread -lm -lrt -ldl -lresolv
 PLATFORM_LIBS :=
 
 
@@ -197,6 +197,9 @@ opensouce_clean: FORCE
 	@rm -fr platform/os/linux_glib/glib/zlib-1.2.11
 	@rm -fr platform/os/linux_glib/glib/glib-2.40.2
 	@rm -fr platform/os/linux_glib/glib/libffi-3.2.1
+	@rm -fr platform/os/linux/ubus/json-c
+	@rm -fr platform/os/linux/ubus/libubox
+	@rm -fr platform/os/linux/ubus/ubus
 	@exit 0
 
 clean: FORCE
