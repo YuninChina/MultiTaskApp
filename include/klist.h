@@ -10,6 +10,10 @@ extern "C" {
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 
+#ifndef NULL
+#define NULL 0
+#endif
+
 #ifndef LIST_POISON1
 #define LIST_POISON1  ((void *) NULL)
 #endif

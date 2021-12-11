@@ -5,6 +5,7 @@ PHONY : all
 TARGET_NAME ?= target/bin/multitask
 LIBCOMM_D_NAME ?= target/lib/libmultitask.so
 LIBCOMM_S_NAME ?= target/lib/libmultitask.a
+LD_COMM_NAME ?= -lmultitask
 
 #############################
 
@@ -184,7 +185,7 @@ objs := init/main.o
 
 all: ${dirs} ${objs} build_comms_static_lib FORCE
 	mkdir -p target/bin target/lib target/include
-	$(CC) ${CFLAGS} ${LINK_PATH} -o ${TARGET_NAME} ${objs} ${LD_LIBS}
+	$(CC) ${CFLAGS} ${LINK_PATH} -o ${TARGET_NAME} ${objs} ${LD_COMM_NAME} ${LD_LIBS}
 
 test_dirs := sample/
 test_dirs := ${patsubst %/,%,$(filter %/, $(test_dirs))}

@@ -10,8 +10,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include "parson.h"
-
 #include "multitask.h"
 
 #include <sys/syscall.h>
@@ -308,6 +306,7 @@ void os_task_mm_show(void)
 
 int os_task_mm_json_get(char **ppjson)
 {
+#if 0
 	char *pjson = NULL;
 	RETURN_VAL_IF_FAIL(ppjson,-1);
 	
@@ -379,6 +378,10 @@ int os_task_mm_json_get(char **ppjson)
 	///////////////////////////////////////////
 	*ppjson = pjson;
 	return 0;
+#else
+	return -1;
+#endif	
+	
 }
 
 
