@@ -2,7 +2,7 @@
 obj-y :=
 obj-y += os_async_queue.o
 obj-y += os_broadcast.o
-obj-y += os_evdriver.o
+obj-$(CONFIG_EVDRIVER) += os_evdriver.o
 obj-y += os_log.o
 obj-y += os_misc.o
 obj-y += os_mm.o
