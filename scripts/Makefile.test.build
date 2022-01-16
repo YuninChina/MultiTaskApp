@@ -32,7 +32,7 @@ __build: ${builtin-target} $(subdir-y) FORCE
 ifdef builtin-target
 $(builtin-target): FORCE
 	$(if ${obj-y},mkdir -p $(install_bin))
-	$(if ${obj-y},$(CC) ${TEST_CFLAGS} ${LINK_PATH} -o $@ $@.c ${LD_LIBS})
+	$(if ${obj-y},$(CC) ${TEST_CFLAGS} ${LINK_PATH} -o $@ $@.c ${LD_COMM_NAME} ${LD_LIBS})
 	$(if ${obj-y},install -p -m 0555 $@ $(install_bin))
 endif # builtin-target
 

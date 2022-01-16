@@ -1,5 +1,5 @@
 
 obj-y :=
 obj-y += base/
-obj-y += ubus/
+obj-$(CONFIG_UBUS) += ubus/
 

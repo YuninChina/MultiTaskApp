@@ -5,4 +5,5 @@ CROSS_COMPILE=arm-hisiv400-linux-
 
 #config
 CONFIG_OS=linux
+CONFIG_UBUS=y
 

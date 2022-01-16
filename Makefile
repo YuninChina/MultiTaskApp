@@ -7,6 +7,7 @@ LIBCOMM_D_NAME ?= target/lib/libmultitask.so
 LIBCOMM_S_NAME ?= target/lib/libmultitask.a
 LD_COMM_NAME ?= -lmultitask
 
+export LD_COMM_NAME
 #############################
 
 # Shell command ###########
@@ -95,6 +96,9 @@ TEST_CFLAGS ?=
 MERGE_LDFLAGS ?=
 BUILD_FILE ?=
 
+LINK_PATH := -L target/lib
+LD_LIBS :=  -lpthread -lm -lrt -ldl -lresolv
+PLATFORM_LIBS :=
 
 ######################################
 export BUILD_FILE
@@ -130,22 +134,10 @@ MERGE_LDFLAGS += -z defs -z muldefs -undefined -Bsymbolic -shared
 
 
 TEST_CFLAGS += ${CFLAGS}
-LINK_PATH := -L target/lib
-LD_LIBS :=  -lpthread -lm -lrt -ldl -lresolv
-PLATFORM_LIBS :=
 
 
-ifeq ($(strip $(HOST_NAME)),arm-hisiv400-linux)
-	PLATFORM_LIBS += 
-	LINK_PATH += 
-	CFLAGS += 
-	CFLAGS += 
-else
+ifeq ($(strip $(CONFIG_SELINUX)),y)
 	LD_LIBS += -lselinux
-	PLATFORM_LIBS += 
-	LINK_PATH += 
-	CFLAGS += 
-	CFLAGS += 
 endif
 
 export AS LD CC CPP AR NM STRIP OBJCOPY OBJDUMP RANLIB CFLAGS LDFLAGS MERGE_LDFLAGS HOST_NAME
