@@ -21,6 +21,10 @@ extern "C" {
 #include "os_stdlibc.h" 
 #include "os_evdriver.h" 
 #include "os_io.h" 
+#include "os_tcp_client.h"
+#include "os_tcp_server.h"
+#include "os_threadpool.h"
+#include "os_sys.h"
 
 
 #ifdef  __cplusplus

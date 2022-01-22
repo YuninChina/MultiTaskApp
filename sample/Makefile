@@ -6,3 +6,8 @@ obj-y += task_json.o
 obj-y += task_broadcast.o
 #obj-y += task_multicast.o
 obj-y += mm_broadcast.o
+
+obj-y += tcp_client.o
+obj-y += tcp_server.o
+
+
