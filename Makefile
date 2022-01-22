@@ -120,8 +120,8 @@ CFLAGS += -fPIC -rdynamic -pipe -O2 -Wall
 CFLAGS += -I ${CURDIR}/include 
 CFLAGS += -I ${CURDIR}/target/include
 CFLAGS += -I ${CURDIR}/include/util
-CFLAGS += -I ${CURDIR}/include/platform/bsp
-CFLAGS += -I ${CURDIR}/include/platform/os
+CFLAGS += -I ${CURDIR}/platform/bsp/include
+CFLAGS += -I ${CURDIR}/platform/os/include
 
 
 #LDFLAGS += -rdynamic -shared 
