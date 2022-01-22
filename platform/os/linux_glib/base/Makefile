@@ -13,6 +13,8 @@ obj-y += os_stdlibc.o
 obj-y += os_task.o
 obj-y += os_thread.o
 obj-y += os_threadpool.o
+obj-y += os_tcp_server.o
+obj-y += os_tcp_client.o
 
 
 CFLAGS += -I ${CURDIR}/target/include/glib-2.0
