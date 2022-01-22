@@ -55,12 +55,12 @@ void os_tcp_client_destroy(os_tcp_client_t *c)
 
 int os_tcp_client_write(os_tcp_client_t *c,void *data,unsigned int size)
 {
-	return 0;
+	return os_write(c->fd, data, size);
 }
 
 int os_tcp_client_read(os_tcp_client_t *c,void *data,unsigned int size)
 {
-	return 0;
+	return os_read(c->fd, data, size);
 }
 
 
