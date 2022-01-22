@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-#define TASK_TCP_SERVER	"tcp_server"
+#define TASK_TCP_SERVER	"tcp_server_node"
 
 #define TCP_SERVER_QUQUE_MAX 10
 

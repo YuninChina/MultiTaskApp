@@ -66,7 +66,7 @@ static void *task_routine_tcp_server(void *arg)
 		node->cb = s->cb;
 		node->user_data = s->user_data;
 		ret = os_threadpool_add(pool,thread_pool_tcp_server_routine,node,0);
-		CONTINUE_IF_FAIL(ret > 0);
+		CONTINUE_IF_FAIL(0 == ret);
 	}
 	
 exit:
