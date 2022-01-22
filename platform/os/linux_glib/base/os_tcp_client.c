@@ -18,17 +18,17 @@ os_tcp_client_t *os_tcp_client_create(const char *name,const char *ip,unsigned s
 	return NULL;
 }
 
-void os_tcp_client_destroy(os_tcp_client_t *s)
+void os_tcp_client_destroy(os_tcp_client_t *c)
 {
 
 }
 
-int os_tcp_client_write(os_tcp_client_t *s,void *data,unsigned int size)
+int os_tcp_client_write(os_tcp_client_t *c,void *data,unsigned int size)
 {
 	return 0;
 }
 
-int os_tcp_client_read(os_tcp_client_t *s,void *data,unsigned int size)
+int os_tcp_client_read(os_tcp_client_t *c,void *data,unsigned int size)
 {
 	return 0;
 }

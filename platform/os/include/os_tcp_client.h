@@ -10,9 +10,9 @@ typedef void (*os_tcp_client_callback_t)(int fd,void *user_data);
 typedef struct os_tcp_client_s os_tcp_client_t;
 
 os_tcp_client_t *os_tcp_client_create(const char *name,const char *ip,unsigned short port);
-void os_tcp_client_destroy(os_tcp_client_t *s);
-int os_tcp_client_write(os_tcp_client_t *s,void *data,unsigned int size);
-int os_tcp_client_read(os_tcp_client_t *s,void *data,unsigned int size);
+void os_tcp_client_destroy(os_tcp_client_t *c);
+int os_tcp_client_write(os_tcp_client_t *c,void *data,unsigned int size);
+int os_tcp_client_read(os_tcp_client_t *c,void *data,unsigned int size);
 
 
 
