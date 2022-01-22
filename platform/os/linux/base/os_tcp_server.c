@@ -52,7 +52,6 @@ static void *task_routine_tcp_server(void *arg)
 	int ret;
 	os_threadpool_t *pool;
 	os_tcp_server_node_t *node = NULL;
-	
 	os_tcp_server_t *s = (os_tcp_server_t *)arg;
 	pool = os_threadpool_create(s->threads,TCP_SERVER_QUQUE_MAX,0);
 	GOTO_LABEL_IF_FAIL(pool, exit);
@@ -96,11 +95,11 @@ os_tcp_server_t *os_tcp_server_create(int threads,unsigned int listen_fds,int po
     RETURN_VAL_IF_FAIL(ret >= 0, NULL);
     ret = listen(listen_fd, threads);
     RETURN_VAL_IF_FAIL(ret >= 0, NULL);
-	task = os_task_create(TASK_TCP_SERVER,0,0, task_routine_tcp_server, (void *)s);
-	RETURN_VAL_IF_FAIL(task, NULL);
 	s = MALLOC(sizeof(*s));
 	RETURN_VAL_IF_FAIL(s, NULL);
 	sem_init(&s->sem, 0, 0);
+	task = os_task_create(TASK_TCP_SERVER,0,0, task_routine_tcp_server, (void *)s);
+	RETURN_VAL_IF_FAIL2(task, FREE(task);,NULL);
 	s->listen_fd = listen_fd;
 	s->threads = threads;
 	s->listen_fds = listen_fds;

@@ -73,7 +73,6 @@ os_threadpool_t *os_threadpool_create(int thread_count, int queue_size, int flag
 	   pool->thread_count++;
 	   pool->started++;
 	}
-   
 	return pool;
 	
 label2:
