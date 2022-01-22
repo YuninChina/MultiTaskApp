@@ -12,7 +12,7 @@ struct os_tcp_server_s {
 };
 
 
-os_tcp_server_t *os_tcp_server_create(const char *name,int threads,unsigned int listen_fds,int port)
+os_tcp_server_t *os_tcp_server_create(int threads,unsigned int listen_fds,int port,os_tcp_server_callback_t cb,void *user_data)
 {
 	return NULL;
 }
