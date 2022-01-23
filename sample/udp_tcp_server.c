@@ -1,6 +1,11 @@
 #include "multitask.h"
+#include "parson.h"
 
 #define TCP_SERVER2_PORT  6666
+#define TCP_SERVER2_IP  "127.0.0.1"
+#define TCP_SERVER2_MAC  "ff:ff:ff:ff:ff:ff"
+
+#define UDP_SERVER2_PORT  5555
 
 static void __tcp_server_callback2(int fd,void *user_data)
 {
@@ -30,18 +35,22 @@ static void *task_routine_udp_server2(void *arg)
 	os_broadcast_t *b = NULL;
 	char *pjson = NULL;
 	
-	b = os_broadcast_create(BROADCAST_TYPE_SERVER,TCP_SERVER2_PORT);
-	ASSERT(b);
-	
+	b = os_broadcast_create(BROADCAST_TYPE_SERVER,UDP_SERVER2_PORT);
+	RETURN_VAL_IF_FAIL(b,NULL);
+	PJSON_Value *jvalRoot = pjson_value_init_object();
+	RETURN_VAL_IF_FAIL(jvalRoot,NULL);
+	PJSON_Object *jobjRoot = pjson_value_get_object(jvalRoot);
+	RETURN_VAL_IF_FAIL(jobjRoot,NULL);
+	pjson_object_dotset_string(jobjRoot,"ip",TCP_SERVER2_IP);
+	pjson_object_dotset_number(jobjRoot,"port",TCP_SERVER2_PORT);
+	pjson_object_dotset_string(jobjRoot,"mac",TCP_SERVER2_MAC);
+	pjson = pjson_serialize_to_string(jvalRoot);
+	RETURN_VAL_IF_FAIL(pjson,NULL);
 	while(1)
 	{
-		if(0 == os_task_mm_json_get(&pjson))
-		{
-			MLOGD("\n%s\n",pjson);
-			os_broadcast_send(b, (unsigned char *)pjson, os_strlen(pjson));
-			/////////////////////////////
-			FREE(pjson);
-		}
+		MLOGD("json: %s\n",pjson);
+		os_broadcast_send(b, (unsigned char *)pjson, os_strlen(pjson));
+		/////////////////////////////
 		/////////////////////////////
 		os_sleep(1);
 	}

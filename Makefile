@@ -122,6 +122,7 @@ CFLAGS += -I ${CURDIR}/target/include
 CFLAGS += -I ${CURDIR}/include/util
 CFLAGS += -I ${CURDIR}/platform/bsp/include
 CFLAGS += -I ${CURDIR}/platform/os/include
+CFLAGS += -I ${CURDIR}/util
 
 
 #LDFLAGS += -rdynamic -shared 
