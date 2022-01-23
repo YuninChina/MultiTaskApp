@@ -1,5 +1,5 @@
 
 obj-y :=
 
-oby-$(CONFIG_PARSON) += parson.o
+obj-$(CONFIG_PARSON) += parson.o
 

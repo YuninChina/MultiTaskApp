@@ -94,7 +94,7 @@ CFLAGS ?=
 LDFLAGS ?= 
 TEST_CFLAGS ?=
 MERGE_LDFLAGS ?=
-BUILD_FILE ?=
+BUILD_FILE ?= build/ubuntu.make
 
 LINK_PATH := -L target/lib
 LD_LIBS :=  -lpthread -lm -lrt -ldl -lresolv
