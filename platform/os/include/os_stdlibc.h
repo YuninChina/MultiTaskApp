@@ -22,6 +22,9 @@ char *os_strncpy(char *dest, const char *src, os_size_t n);
 int os_scanf(const char *format, ...);
 int os_sscanf(const char *str, const char *format, ...);
 os_size_t os_strlen(const char *s);
+int os_strcmp(const char *s1, const char *s2);
+int os_strncmp(const char *s1, const char *s2, unsigned int n);
+
 
 
 #ifdef  __cplusplus

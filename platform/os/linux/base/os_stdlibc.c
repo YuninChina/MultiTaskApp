@@ -81,3 +81,15 @@ os_size_t os_strlen(const char *s)
 }
 
 
+int os_strcmp(const char *s1, const char *s2)
+{
+	return strcmp(s1,s2);
+}
+
+
+int os_strncmp(const char *s1, const char *s2, unsigned int n)
+{
+	return strncmp(s1,s2,n);
+}
+
+
