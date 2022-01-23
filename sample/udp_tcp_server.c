@@ -5,7 +5,7 @@
 #define TCP_SERVER2_IP  "127.0.0.1"
 #define TCP_SERVER2_MAC  "ff:ff:ff:ff:ff:ff"
 
-#define UDP_SERVER2_PORT  5555
+#define UDP_SERVER2_PORT  9999
 
 static void __tcp_server_callback2(int fd,void *user_data)
 {
@@ -56,6 +56,7 @@ static void *task_routine_udp_server2(void *arg)
 	}
 	
 	os_broadcast_destroy(b);
+	pjson_value_free(jvalRoot);
 	return NULL;
 }
 

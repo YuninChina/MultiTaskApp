@@ -1,6 +1,8 @@
 #include "multitask.h"
+#include "parson.h"
 
 #define TCP_CLINET2_PORT  6666
+#define UDP_CLINET2_PORT  9999
 
 typedef struct test_ip_info_s {
 	const char *ip;
@@ -17,11 +19,14 @@ static void *task_routine_tcp_client2(void *arg)
 	int ret = -1;
 	char buf[1024] = {0};
 	static const char *old_ip = NULL;
+	
 	while(1)
 	{
 		os_memset(buf, 0, sizeof(buf));
 		ipinfo = os_msg_recv2(&size);
 		RETURN_VAL_IF_FAIL(ipinfo, NULL);
+		MLOGI("ip:%s,port:%d,mac[%02x:%02x:%02x:%02x:%02x:%02x]\n",ipinfo->ip,ipinfo->port,
+		ipinfo->mac[0],ipinfo->mac[1],ipinfo->mac[2],ipinfo->mac[3],ipinfo->mac[4],ipinfo->mac[5]);
 		if(NULL == old_ip 
 		|| 0 != os_strcmp(old_ip,ipinfo->ip))
 		{
@@ -54,17 +59,33 @@ static void *task_routine_udp_client2(void *arg)
 	unsigned char buf[1024] = {0};
 	int ret = -1;
 	test_ip_info_t *ipinfo = NULL;
+	PJSON_Value *jvalRoot = NULL;
+	PJSON_Object *jobjRoot = NULL;
 	
-	b = os_broadcast_create(BROADCAST_TYPE_CLIENT,TCP_CLINET2_PORT);
+	b = os_broadcast_create(BROADCAST_TYPE_CLIENT,UDP_CLINET2_PORT);
 	ASSERT(b);
 	
 	while(1)
 	{
 		ret = os_broadcast_recv(b, buf, sizeof(buf));
+		CONTINUE_IF_FAIL(ret > 0);
 		//json parse
-
+		MLOGD("buf: %s",buf);
+		pjson = (char *)buf;
+		jvalRoot = pjson_value_init_string(pjson);
+		RETURN_VAL_IF_FAIL(jvalRoot,NULL);
+		jobjRoot = pjson_value_get_object(jvalRoot);
+		RETURN_VAL_IF_FAIL(jobjRoot,NULL);
+		ipinfo = MALLOC(sizeof(*ipinfo));
+		RETURN_VAL_IF_FAIL(ipinfo, NULL);
+		ipinfo->ip = pjson_object_dotget_string(jobjRoot, "ip");
+		ipinfo->port = (unsigned short)pjson_object_dotget_number(jobjRoot, "port");
+		const char *mac = pjson_object_dotget_string(jobjRoot, "mac");
+		os_sscanf(mac, "%02x:%02x:%02x:%02x:%02x:%02x",&ipinfo->mac[0],&ipinfo->mac[1]
+		,&ipinfo->mac[2],&ipinfo->mac[3],&ipinfo->mac[4],&ipinfo->mac[5]);
 		//
 		os_msg_send2("tcp_client2", 0, ipinfo, sizeof(*ipinfo));
+		pjson_value_free(jvalRoot);
 		/////////////////////////////
 		os_sleep(1);
 	}
