@@ -11,12 +11,15 @@ static void __tcp_server_callback2(int fd,void *user_data)
 {
 	char buf[1024] = {0};
 	int ret = -1;
-	ret = os_read(fd,buf, sizeof(buf));
-	RETURN_IF_FAIL(ret > 0);
-	MLOGD("os_read: %s",buf);
-	ret = os_write(fd,buf, ret);
-	RETURN_IF_FAIL(ret > 0);
-	MLOGD("os_write: %d byte",ret);
+	//while(1)
+	{
+		ret = os_read(fd,buf, sizeof(buf));
+		RETURN_IF_FAIL(ret > 0);
+		MLOGD("os_read: %s",buf);
+		ret = os_write(fd,buf, ret);
+		RETURN_IF_FAIL(ret > 0);
+		MLOGD("os_write: %d byte",ret);
+	}
 }
 
 static void *task_routine_tcp_server2(void *arg)
