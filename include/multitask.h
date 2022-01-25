@@ -25,6 +25,7 @@ extern "C" {
 #include "os_tcp_server.h"
 #include "os_threadpool.h"
 #include "os_sys.h"
+#include "os_file.h"
 
 
 #ifdef  __cplusplus

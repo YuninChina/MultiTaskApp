@@ -17,4 +17,5 @@ obj-y += os_tcp_server.o
 obj-y += os_tcp_client.o
 obj-y += os_sys.o
 obj-y += os_timer.o
+obj-y += os_file.o
 
