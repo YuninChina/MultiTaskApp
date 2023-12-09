@@ -1,5 +1,6 @@
-#include "multitask.h"
+#include <pthread.h>
 
+#include "multitask.h"
 
 #define TASK_PRODUCER	"producer"
 #define TASK_CONSUMER1	"consumer1"
@@ -130,6 +131,25 @@ static void *task_routine_loop(void *arg)
 }
 
 
+pthread_mutex_t dieMutex = PTHREAD_MUTEX_INITIALIZER;
+//死锁
+static void *task_routine_die_lock(void *arg)
+{
+	os_sleep(3);
+	pthread_mutex_lock(&dieMutex); 
+	os_sleep(10);
+	return NULL;
+}
+
+static void *task_routine_lock(void *arg)
+{
+	pthread_mutex_lock(&dieMutex); 
+	while (1)
+	{
+		os_sleep(10);
+	}
+	return NULL;
+}
 
 int main(void)
 {
@@ -142,6 +162,8 @@ int main(void)
 	os_task_create(TASK_CONSUMER1,0,0, task_routine_consumer1, (void *)NULL);
 	os_task_create(TASK_CONSUMER2,0,0, task_routine_consumer2, (void *)NULL);
 	os_task_create("loop",0,0, task_routine_loop, (void *)NULL);
+	os_task_create("lock",0,0, task_routine_lock, (void *)NULL);
+	os_task_create("die_lock",0,0, task_routine_die_lock, (void *)NULL);
 	
 	while(1)
 	{
