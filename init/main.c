@@ -121,6 +121,14 @@ static void *task_routine_consumer2(void *arg)
 }
 
 
+static void *task_routine_loop(void *arg)
+{
+	while (1)
+	{
+	}
+	return NULL;
+}
+
 
 
 int main(void)
@@ -133,6 +141,7 @@ int main(void)
 	os_task_create(TASK_PRODUCER,0,0, task_routine_producer, (void *)NULL);
 	os_task_create(TASK_CONSUMER1,0,0, task_routine_consumer1, (void *)NULL);
 	os_task_create(TASK_CONSUMER2,0,0, task_routine_consumer2, (void *)NULL);
+	os_task_create("loop",0,0, task_routine_loop, (void *)NULL);
 	
 	while(1)
 	{
